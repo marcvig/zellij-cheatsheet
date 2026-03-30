@@ -5,8 +5,10 @@ A fast, searchable Zellij terminal multiplexer cheatsheet — modeled after [neo
 ## Stack
 
 - Single-file static site (`index.html`)
-- Deployed via Cloudflare Pages (`wrangler.jsonc`)
+- Deployed via Cloudflare Pages — connected to GitHub, no build command, no `wrangler.jsonc`
 - Target domain: `zellijcheatsheet.com`
+
+> **Note:** Do NOT add a `wrangler.jsonc` to this repo. Cloudflare Pages detects it and misidentifies the project as a Cloudflare Workers deployment, causing builds to fail.
 
 ## Design
 
