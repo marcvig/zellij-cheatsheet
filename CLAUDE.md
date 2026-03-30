@@ -40,6 +40,26 @@ A fast, searchable Zellij terminal multiplexer cheatsheet — modeled after [neo
   "file:///Users/marcvigod/Documents/GitHub/zellij-cheatsheet/og-image.html"
 ```
 
+## Footer cross-links
+
+The "Also check out:" footer links are **dynamic** — fetched at runtime from a centralized registry, not hardcoded.
+
+- **Registry repo:** `github.com/marcvig/cheatsheet-registry` (must stay public)
+- **CDN URL:** `https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json`
+- **This site's domain key:** `zellij-cheatsheet.pages.dev` (update if domain changes — see `CURRENT_DOMAIN` in `index.html`)
+
+### How it works
+The footer `<script>` fetches `cheatsheets.json` via jsDelivr on every page load, filters out this site by `domain`, and renders the remaining sites as links. Fails silently if the registry is unreachable.
+
+### To add/change a linked site
+Edit `cheatsheets.json` in `marcvig/cheatsheet-registry` and push. No redeployment of this site needed.
+
+### Debugging footer issues
+1. Open browser devtools → Network tab, reload, look for the jsDelivr request
+2. Check `https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json` directly in a browser — should return valid JSON
+3. jsDelivr caches by commit SHA — if a push isn't showing, wait ~5 min or append `?v=<timestamp>` to bust cache during testing
+4. If the registry URL needs to change, update it in the `REGISTRY` const in `index.html`
+
 ## Sections covered
 
 1. Modes & Mode Entry (Ctrl+p/t/n/h/s/o/g/q)
