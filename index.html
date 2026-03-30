@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     PRIMARY META
+     ============================================================ -->
+<title>Zellij Cheatsheet — Complete Terminal Multiplexer Reference</title>
+<meta name="description" content="A fast, searchable Zellij cheatsheet covering every essential command: panes, tabs, sessions, scroll, resize, move, layouts, and CLI — always free.">
+<meta name="keywords" content="zellij cheatsheet, zellij commands, zellij keybindings, zellij keyboard shortcuts, zellij tutorial, zellij panes, zellij tabs, zellij sessions, terminal multiplexer, zellij reference, zellij guide, zellij layouts">
+<meta name="author" content="zellijcheatsheet">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0f1117">
+<script>
+  // Apply saved theme before paint to avoid flash
+  if (localStorage.getItem('zellij-theme') === 'light') document.documentElement.classList.add('preload-light');
+</script>
+<style> .preload-light body, html.preload-light body { background: #ffffff; } </style>
+
+<!-- ============================================================
+     CANONICAL
+     ============================================================ -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://zellijcheatsheet.com/">
+
+<!-- ============================================================
+     OPEN GRAPH (Facebook, LinkedIn, Discord, Slack, iMessage…)
+     ============================================================ -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zellij Cheatsheet">
+<meta property="og:title" content="Zellij Cheatsheet — Complete Terminal Multiplexer Reference">
+<meta property="og:description" content="A fast, searchable Zellij cheatsheet covering every essential command: panes, tabs, sessions, scroll, resize, move, layouts, and CLI — always free.">
+<meta property="og:url" content="https://zellijcheatsheet.com/">
+<meta property="og:image" content="https://zellijcheatsheet.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zellij Cheatsheet — searchable terminal multiplexer command reference">
+<meta property="og:locale" content="en_US">
+
+<!-- ============================================================
+     TWITTER / X CARD
+     ============================================================ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zellij Cheatsheet — Complete Terminal Multiplexer Reference">
+<meta name="twitter:description" content="A fast, searchable Zellij cheatsheet covering every essential command: panes, tabs, sessions, scroll, resize, move, layouts, and CLI — always free.">
+<meta name="twitter:image" content="https://zellijcheatsheet.com/og-image.png">
+<meta name="twitter:image:alt" content="Zellij Cheatsheet — searchable terminal multiplexer command reference">
+
+<!-- ============================================================
+     JSON-LD STRUCTURED DATA
+     ============================================================ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Zellij Cheatsheet — Complete Terminal Multiplexer Reference",
+  "description": "A fast, searchable Zellij cheatsheet covering every essential command: panes, tabs, sessions, scroll, resize, move, layouts, and CLI.",
+  "url": "https://zellijcheatsheet.com/",
+  "inLanguage": "en-US",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Zellij Cheatsheet",
+    "url": "https://zellijcheatsheet.com/"
+  },
+  "about": {
+    "@type": "SoftwareApplication",
+    "name": "Zellij",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS",
+    "url": "https://zellij.dev"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "zellijcheatsheet"
+  },
+  "keywords": "zellij, cheatsheet, terminal multiplexer, keybindings, panes, tabs, sessions, reference",
+  "datePublished": "2026-03-29",
+  "dateModified": "2026-03-29"
+}
+</script>
+
+<!-- ============================================================
+     GOOGLE FONTS
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: #c084fc;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8b949e;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
+    margin-top: 8px;
+    margin-bottom: 18px;
+  }
+
+  /* SEARCH BOX */
+  .search-wrap {
+    max-width: 540px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 11px 16px 11px 42px;
+    background: #161b22;
+    border: 1px solid #8b5cf688;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-wrap input:focus {
+    border-color: #c084fc;
+    box-shadow: 0 0 0 3px #8b5cf633;
+  }
+  .search-wrap input::placeholder { color: #484f58; }
+  .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #484f58;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .search-clear.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .search-clear:hover { color: #e2e8f0; }
+  body.light .search-clear { color: #8c959f; }
+  body.light .search-clear:hover { color: #24292f; }
+  .search-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #c084fc;
+    font-size: 1rem;
+    pointer-events: none;
+  }
+  .search-count {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8b949e;
+    margin-top: -14px;
+    margin-bottom: 18px;
+    min-height: 18px;
+    transition: color 0.2s;
+  }
+  .search-count.no-results { color: #f85149; }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    font-size: 0.78rem;
+  }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .badge-n { background: #8b5cf622; color: #c084fc; border: 1px solid #8b5cf655; }
+  .badge-p { background: #f0883e22; color: #f0883e; border: 1px solid #f0883e55; }
+  .badge-t { background: #39d35322; color: #39d353; border: 1px solid #39d35355; }
+  .badge-s { background: #d2a8ff22; color: #d2a8ff; border: 1px solid #d2a8ff55; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card.hidden { display: none; }
+  .card-header {
+    background: #21262d;
+    padding: 10px 14px;
+    font-size: clamp(0.68rem, 1.5vw, 0.75rem);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #c084fc;
+    border-bottom: 1px solid #30363d;
+  }
+  .card-header.green  { color: #7ee787; }
+  .card-header.orange { color: #f0883e; }
+  .card-header.purple { color: #d2a8ff; }
+  .card-header.red    { color: #f85149; }
+  .card-header.yellow { color: #e3b341; }
+  .card-header.teal   { color: #39d353; }
+  table { width: 100%; border-collapse: collapse; }
+  tr:nth-child(even) { background: #1c2128; }
+  tr.hidden-row { display: none; }
+  td {
+    padding: 7px 14px;
+    font-size: clamp(0.78rem, 1.8vw, 0.86rem);
+    vertical-align: middle;
+    border-bottom: 1px solid #21262d;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: #e3b341;
+    white-space: nowrap;
+    width: 42%;
+    font-weight: 600;
+  }
+  td:last-child { color: #c9d1d9; }
+
+  /* highlight matched text */
+  mark {
+    background: #e3b34155;
+    color: #e3b341;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 28px;
+    color: #484f58;
+    font-size: 0.8rem;
+    line-height: 2.2;
+  }
+
+  /* ── Crab easter egg ────────────────────────────────────────────────── */
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  .header-top h1 {
+    margin-bottom: 0;
+  }
+  .crab-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #30363d;
+    background: #21262d;
+    cursor: pointer;
+    font-size: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    transform-origin: center;
+    user-select: none;
+  }
+  .crab-btn:hover {
+    background: #c084fc22;
+    border-color: #c084fc;
+    transform: scale(1.08) rotate(-8deg);
+  }
+  @keyframes crab-explode {
+    0%   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+    20%  { transform: scale(1.5) rotate(-15deg); opacity: 1; }
+    40%  { transform: scale(1.8) rotate(15deg);  opacity: 0.8; }
+    60%  { transform: scale(1.2) rotate(-10deg); opacity: 0.4; }
+    80%  { transform: scale(0.3) rotate(30deg);  opacity: 0.1; }
+    100% { transform: scale(0)   rotate(45deg);  opacity: 0; }
+  }
+  @keyframes crab-reappear {
+    0%   { transform: scale(0)   rotate(-20deg); opacity: 0; }
+    50%  { transform: scale(1.3) rotate(5deg);   opacity: 1; }
+    75%  { transform: scale(0.9) rotate(-3deg);  opacity: 1; }
+    100% { transform: scale(1)   rotate(0deg);   opacity: 1; }
+  }
+  .crab-btn.exploding   { animation: crab-explode   0.55s ease-in  forwards; }
+  .crab-btn.reappearing { animation: crab-reappear  0.45s ease-out forwards; }
+
+  /* ── Back to top ─────────────────────────────────────────────────────── */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid #30363d;
+    background: #21262d;
+    color: #c084fc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s, border-color 0.2s;
+    z-index: 100;
+  }
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .back-to-top:hover {
+    background: #c084fc22;
+    border-color: #c084fc;
+  }
+  .back-to-top svg {
+    width: 18px;
+    height: 18px;
+    stroke: #c084fc;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── Theme toggle button ─────────────────────────────────────────────── */
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #30363d;
+    background: #21262d;
+    cursor: pointer;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .theme-toggle:hover {
+    background: #c084fc22;
+    border-color: #c084fc;
+    transform: scale(1.08);
+  }
+
+  /* ── Light mode overrides ────────────────────────────────────────────── */
+  body.light {
+    background: #ffffff;
+    color: #24292f;
+  }
+  body.light h1                        { color: #7c3aed; }
+  body.light .subtitle                 { color: #57606a; }
+  body.light .search-wrap input        { background: #f6f8fa; border-color: #7c3aed88; color: #24292f; }
+  body.light .search-wrap input:focus  { border-color: #7c3aed; box-shadow: 0 0 0 3px #7c3aed33; }
+  body.light .search-wrap input::placeholder { color: #8c959f; }
+  body.light .search-icon              { color: #7c3aed; }
+  body.light .search-count             { color: #57606a; }
+  body.light .search-count.no-results  { color: #cf222e; }
+  body.light .badge-n { background: #7c3aed18; color: #7c3aed; border-color: #7c3aed55; }
+  body.light .badge-p { background: #bc4c0018; color: #bc4c00; border-color: #bc4c0055; }
+  body.light .badge-t { background: #11632918; color: #116329; border-color: #11632955; }
+  body.light .badge-s { background: #8250df18; color: #8250df; border-color: #8250df55; }
+  body.light .card                     { background: #f6f8fa; border-color: #d0d7de; }
+  body.light .card-header              { background: #eaeef2; color: #7c3aed; border-bottom-color: #d0d7de; }
+  body.light .card-header.green        { color: #116329; }
+  body.light .card-header.orange       { color: #bc4c00; }
+  body.light .card-header.purple       { color: #8250df; }
+  body.light .card-header.red          { color: #cf222e; }
+  body.light .card-header.yellow       { color: #9a6700; }
+  body.light .card-header.teal         { color: #116329; }
+  body.light tr:nth-child(even)        { background: #edf0f3; }
+  body.light td                        { border-bottom-color: #eaeef2; }
+  body.light td:first-child                              { color: #7c3aed; }
+  body.light .card:has(.card-header.green)  td:first-child { color: #116329; }
+  body.light .card:has(.card-header.orange) td:first-child { color: #bc4c00; }
+  body.light .card:has(.card-header.purple) td:first-child { color: #8250df; }
+  body.light .card:has(.card-header.red)    td:first-child { color: #cf222e; }
+  body.light .card:has(.card-header.yellow) td:first-child { color: #9a6700; }
+  body.light .card:has(.card-header.teal)   td:first-child { color: #0e7490; }
+  body.light td:last-child             { color: #24292f; }
+  body.light mark                      { background: #fff8c5; color: #9a6700; }
+  body.light footer                    { color: #8c959f; }
+  body.light footer span               { color: #24292f !important; }
+  body.light footer a                  { color: #57606a !important; }
+  body.light .crab-btn                 { background: #eaeef2; border-color: #d0d7de; }
+  body.light .crab-btn:hover           { background: #7c3aed22; border-color: #7c3aed; }
+  body.light .theme-toggle             { background: #eaeef2; border-color: #d0d7de; }
+  body.light .theme-toggle:hover       { background: #7c3aed22; border-color: #7c3aed; }
+  body.light .back-to-top              { background: #eaeef2; border-color: #d0d7de; }
+  body.light .back-to-top:hover        { background: #7c3aed22; border-color: #7c3aed; }
+  body.light .back-to-top svg          { stroke: #7c3aed; }
+
+  /* ── Tooltip toggle switch ───────────────────────────────────────────── */
+  .tooltip-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #8b949e;
+    margin-top: -10px;
+    margin-bottom: 18px;
+  }
+  .toggle-switch { display: inline-flex; align-items: center; cursor: pointer; flex-shrink: 0; }
+  .toggle-switch input { display: none; }
+  .toggle-track {
+    width: 34px; height: 19px;
+    background: #30363d;
+    border-radius: 10px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-track { background: #c084fc; }
+  .toggle-thumb {
+    position: absolute; top: 2.5px; left: 2.5px;
+    width: 14px; height: 14px;
+    background: #fff; border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle-switch input:checked + .toggle-track .toggle-thumb { transform: translateX(15px); }
+  body.light .tooltip-hint { color: #57606a; }
+  body.light .toggle-track { background: #d0d7de; }
+  body.light .toggle-switch input:checked + .toggle-track { background: #7c3aed; }
+
+  /* ── Tooltip popup ───────────────────────────────────────────────────── */
+  .tooltip {
+    position: fixed; z-index: 1000;
+    background: #1c2128;
+    border: 1px solid #c084fc;
+    border-radius: 10px;
+    padding: 14px 16px;
+    width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: none;
+    pointer-events: auto;
+  }
+  .tooltip.visible { display: block; }
+  .tooltip-close {
+    position: absolute; top: 8px; right: 10px;
+    background: none; border: none;
+    color: #484f58; font-size: 1rem; cursor: pointer;
+    padding: 2px 7px; border-radius: 4px; line-height: 1;
+    transition: color 0.15s, background 0.15s;
+  }
+  .tooltip-close:hover { color: #e2e8f0; background: #30363d; }
+  .tooltip-cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem; color: #c084fc; font-weight: 600;
+    margin-bottom: 6px; margin-right: 20px; word-break: break-word;
+  }
+  .tooltip-desc { font-size: 0.8rem; color: #c9d1d9; line-height: 1.5; margin-bottom: 12px; }
+  .tooltip-example-label {
+    font-size: 0.65rem; color: #8b949e;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px;
+  }
+  .tooltip-example-row {
+    display: flex; align-items: center; gap: 8px;
+    background: #0f1117; border: 1px solid #30363d;
+    border-radius: 6px; padding: 7px 10px;
+  }
+  .tooltip-example-code {
+    flex: 1; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: #e3b341;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .tooltip-copy {
+    background: #c084fc18; border: 1px solid #c084fc44; color: #c084fc;
+    padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;
+    cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .tooltip-copy:hover { background: #c084fc30; }
+  .tooltip-copy.copied { color: #58a6ff; border-color: #58a6ff55; background: #58a6ff18; }
+  .tooltip-danger {
+    background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.3);
+    border-radius: 6px; padding: 6px 10px; margin-bottom: 10px;
+    color: #f85149; font-size: 0.78rem;
+    display: none; align-items: center; gap: 6px;
+  }
+  body.light .tooltip { background: #f6f8fa; border-color: #7c3aed; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  body.light .tooltip-close { color: #8c959f; }
+  body.light .tooltip-close:hover { color: #24292f; background: #eaeef2; }
+  body.light .tooltip-cmd { color: #7c3aed; }
+  body.light .tooltip-desc { color: #24292f; }
+  body.light .tooltip-example-label { color: #57606a; }
+  body.light .tooltip-example-row { background: #eaeef2; border-color: #d0d7de; }
+  body.light .tooltip-example-code { color: #9a6700; }
+  body.light .tooltip-copy { background: #7c3aed12; border-color: #7c3aed44; color: #7c3aed; }
+  body.light .tooltip-copy:hover { background: #7c3aed22; }
+  body.light .tooltip-copy.copied { color: #0969da; border-color: #0969da55; background: #0969da12; }
+  body.light .tooltip-danger { background: rgba(207,34,46,0.06); border-color: rgba(207,34,46,0.25); color: #cf222e; }
+
+  /* ── Danger badge ────────────────────────────────────────────────────── */
+  .cmd-inner { display: flex; align-items: center; gap: 6px; }
+  .cmd-text { flex: 1; min-width: 0; word-break: break-word; }
+  .danger-badge { flex-shrink: 0; font-size: 1.4em; color: #f0883e; line-height: 1; }
+
+  /* ── Placeholder args ────────────────────────────────────────────────── */
+  .placeholder { color: #e3b341; font-style: italic; }
+  body.light .placeholder { color: #9a6700; }
+
+  /* ── Hoverable rows ──────────────────────────────────────────────────── */
+  tr[data-tip] { cursor: pointer; }
+  .card-header[data-tip] { cursor: pointer; }
+  .legend span[data-tip]  { cursor: pointer; }
+
+  @media (max-width: 600px) { .tooltip { width: 92vw; } }
+</style>
+</head>
+<body>
+
+<!-- Tooltip popup -->
+<div id="tooltip" class="tooltip" role="tooltip">
+  <button class="tooltip-close" id="tooltipClose" aria-label="Close">✕</button>
+  <div class="tooltip-danger" id="tooltipDanger"></div>
+  <div class="tooltip-cmd" id="tooltipCmd"></div>
+  <div class="tooltip-desc" id="tooltipDesc"></div>
+  <div id="tooltipExampleSection">
+    <div class="tooltip-example-label">Keys to press</div>
+    <div class="tooltip-example-row">
+      <code class="tooltip-example-code" id="tooltipCode"></code>
+      <button class="tooltip-copy" id="tooltipCopy">Copy</button>
+    </div>
+  </div>
+</div>
+
+<div class="header-top">
+  <button class="crab-btn" id="crabBtn" aria-label="🦀 Easter egg" title="Zellij is written in Rust 🦀">🦀</button>
+  <h1>Zellij Cheatsheet</h1>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">☀️</button>
+</div>
+<p class="subtitle">Complete Zellij command reference — searchable, fast, always free</p>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input type="text" id="search" placeholder="Type to filter commands…" autocomplete="off" spellcheck="false">
+  <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+</div>
+<div class="search-count" id="count"></div>
+<p class="tooltip-hint">
+  <label class="toggle-switch" title="Enable / disable command tooltips">
+    <input type="checkbox" id="tooltipToggle" checked>
+    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+  </label>
+  Click or hover any command for a description &amp; example
+</p>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span data-cmd="Normal Mode" data-tip="Zellij's default mode. Always active unless locked. Use Ctrl+ combos to enter sub-modes (Pane, Tab, Scroll…), or Alt+ shortcuts for instant pane/tab navigation without entering a mode."><span class="badge badge-n">NRM</span> Normal</span>
+  <span data-cmd="Pane Mode" data-tip="Enter with Ctrl+p. Manage panes — open, close, focus, fullscreen, float. Press Esc or Enter to return to Normal mode. The status bar shows 'PANE' when active."><span class="badge badge-p">PNE</span> Pane</span>
+  <span data-cmd="Tab Mode" data-tip="Enter with Ctrl+t. Manage tabs — create, close, rename, navigate. Press Esc or Enter to return to Normal mode. The status bar shows 'TAB' when active."><span class="badge badge-t">TAB</span> Tab</span>
+  <span data-cmd="Scroll Mode" data-tip="Enter with Ctrl+s. Scroll through pane history, search text, edit scrollback in $EDITOR. Press Esc or Enter to exit. Particularly useful for long command output."><span class="badge badge-s">SCR</span> Scroll</span>
+</div>
+
+<div class="grid" id="grid">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       MODES OVERVIEW
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header green" data-cmd="Zellij Modes" data-tip="Zellij is modal — press a Ctrl+ key to enter a mode, then use single-key shortcuts within it. Press Esc or Enter to return to Normal. The status bar at the bottom always shows the active mode.">Modes &amp; Mode Entry</div>
+    <table>
+      <tr data-tip="Enter Pane mode to manage panes — create, close, focus, resize, float" data-example="Ctrl+p"><td>Ctrl+p</td><td>Enter Pane mode</td></tr>
+      <tr data-tip="Enter Tab mode to manage tabs — create, close, rename, navigate" data-example="Ctrl+t"><td>Ctrl+t</td><td>Enter Tab mode</td></tr>
+      <tr data-tip="Enter Resize mode to resize the active pane" data-example="Ctrl+n"><td>Ctrl+n</td><td>Enter Resize mode</td></tr>
+      <tr data-tip="Enter Move mode to move the active pane within the layout" data-example="Ctrl+h"><td>Ctrl+h</td><td>Enter Move mode</td></tr>
+      <tr data-tip="Enter Scroll mode to scroll pane history and search output" data-example="Ctrl+s"><td>Ctrl+s</td><td>Enter Scroll mode</td></tr>
+      <tr data-tip="Enter Session mode to manage Zellij sessions — detach, switch, create" data-example="Ctrl+o"><td>Ctrl+o</td><td>Enter Session mode</td></tr>
+      <tr data-tip="Toggle Locked mode — disables all Zellij keybindings and passes input directly to the terminal program. Useful for nested terminals or programs that use the same keys." data-example="Ctrl+g"><td>Ctrl+g</td><td>Toggle Locked mode</td></tr>
+      <tr data-tip="Exit the current mode and return to Normal mode — works from any mode" data-example="Esc"><td>Esc / Enter</td><td>Return to Normal mode</td></tr>
+      <tr data-tip="Quit Zellij — closes the current session" data-example="Ctrl+q" data-danger="Closes the entire Zellij session immediately"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       ALT QUICK KEYS (NORMAL MODE)
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in Normal mode without entering a sub-mode. They're the fastest way to navigate panes and tabs — no mode switch needed. Focus moves immediately on keypress.">Normal Mode — Alt+ Quick Keys</div>
+    <table>
+      <tr data-tip="Move focus to the pane on the left — wraps around if at the edge" data-example="Alt+h"><td>Alt+h / Alt+←</td><td>Focus pane left</td></tr>
+      <tr data-tip="Move focus to the pane below — wraps around if at the edge" data-example="Alt+j"><td>Alt+j / Alt+↓</td><td>Focus pane down</td></tr>
+      <tr data-tip="Move focus to the pane above — wraps around if at the edge" data-example="Alt+k"><td>Alt+k / Alt+↑</td><td>Focus pane up</td></tr>
+      <tr data-tip="Move focus to the pane on the right — wraps around if at the edge" data-example="Alt+l"><td>Alt+l / Alt+→</td><td>Focus pane right</td></tr>
+      <tr data-tip="Switch to the previous tab instantly — no Tab mode needed" data-example="Alt+["><td>Alt+[</td><td>Previous tab</td></tr>
+      <tr data-tip="Switch to the next tab instantly — no Tab mode needed" data-example="Alt+]"><td>Alt+]</td><td>Next tab</td></tr>
+      <tr data-tip="Jump directly to tab number 1-9" data-example="Alt+1"><td>Alt+1–9</td><td>Go to tab N</td></tr>
+      <tr data-tip="Open a new pane in the focused area — uses a shell defined by $SHELL" data-example="Alt+n"><td>Alt+n</td><td>New pane (quick)</td></tr>
+      <tr data-tip="Toggle showing/hiding all floating panes at once" data-example="Alt+f"><td>Alt+f</td><td>Toggle floating panes</td></tr>
+      <tr data-tip="Increase the active pane size toward the left" data-example="Alt+H"><td>Alt+H</td><td>Resize pane left</td></tr>
+      <tr data-tip="Increase the active pane size downward" data-example="Alt+J"><td>Alt+J</td><td>Resize pane down</td></tr>
+      <tr data-tip="Increase the active pane size upward" data-example="Alt+K"><td>Alt+K</td><td>Resize pane up</td></tr>
+      <tr data-tip="Increase the active pane size to the right" data-example="Alt+L"><td>Alt+L</td><td>Resize pane right</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       PANE MANAGEMENT
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header orange" data-cmd="Pane Management" data-tip="Enter Pane mode with Ctrl+p, then press a single key. Panes are the terminal windows inside a tab. You can split, float, fullscreen, rename, and close them. Press Esc or Enter to exit Pane mode.">Pane Management (Ctrl+p → key)</div>
+    <table>
+      <tr data-tip="Move pane focus to the left neighbor" data-example="Ctrl+p, h"><td>h / ←</td><td>Focus pane left</td></tr>
+      <tr data-tip="Move pane focus to the pane below" data-example="Ctrl+p, j"><td>j / ↓</td><td>Focus pane down</td></tr>
+      <tr data-tip="Move pane focus to the pane above" data-example="Ctrl+p, k"><td>k / ↑</td><td>Focus pane up</td></tr>
+      <tr data-tip="Move pane focus to the right neighbor" data-example="Ctrl+p, l"><td>l / →</td><td>Focus pane right</td></tr>
+      <tr data-tip="Open a new pane using the default shell — placed automatically by layout" data-example="Ctrl+p, n"><td>n</td><td>New pane</td></tr>
+      <tr data-tip="Open a new pane split below the current one (horizontal split)" data-example="Ctrl+p, d"><td>d</td><td>New pane (split down)</td></tr>
+      <tr data-tip="Open a new pane split to the right of the current one (vertical split)" data-example="Ctrl+p, r"><td>r</td><td>New pane (split right)</td></tr>
+      <tr data-tip="Close the currently focused pane — prompts if it has a running process" data-example="Ctrl+p, x" data-danger="Closes the pane and terminates its running process"><td>x</td><td>Close pane</td></tr>
+      <tr data-tip="Toggle the current pane to occupy the entire terminal window — press again to restore" data-example="Ctrl+p, f"><td>f</td><td>Toggle fullscreen</td></tr>
+      <tr data-tip="Toggle the current pane between floating (overlaid) and embedded (in the layout) modes" data-example="Ctrl+p, z"><td>z</td><td>Toggle floating pane</td></tr>
+      <tr data-tip="Toggle pane embedding — takes a floating pane and embeds it into the tiled layout, or vice versa" data-example="Ctrl+p, e"><td>e</td><td>Embed / un-embed pane</td></tr>
+      <tr data-tip="Rename the current pane — type a name and press Enter to confirm" data-example="Ctrl+p, c"><td>c</td><td>Rename pane</td></tr>
+      <tr data-tip="Toggle the pane frame borders on/off — useful for a cleaner look" data-example="Ctrl+p, w"><td>w</td><td>Toggle pane frames</td></tr>
+      <tr data-tip="Toggle pane pinning — a pinned floating pane stays visible even when switching focus" data-example="Ctrl+p, i"><td>i</td><td>Toggle pin pane</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TAB MANAGEMENT
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header teal" data-cmd="Tab Management" data-tip="Enter Tab mode with Ctrl+t, then press a single key. Each tab holds its own pane layout. Use tabs to organize different projects or contexts within the same Zellij session.">Tab Management (Ctrl+t → key)</div>
+    <table>
+      <tr data-tip="Switch to the previous tab in the tab bar" data-example="Ctrl+t, h"><td>h / ←</td><td>Previous tab</td></tr>
+      <tr data-tip="Switch to the next tab in the tab bar" data-example="Ctrl+t, l"><td>l / →</td><td>Next tab</td></tr>
+      <tr data-tip="Open a new tab with an empty default layout" data-example="Ctrl+t, n"><td>n</td><td>New tab</td></tr>
+      <tr data-tip="Close the current tab and all its panes" data-example="Ctrl+t, x" data-danger="Closes the entire tab and all panes within it"><td>x</td><td>Close tab</td></tr>
+      <tr data-tip="Rename the current tab — type a name and press Enter to confirm" data-example="Ctrl+t, r"><td>r</td><td>Rename tab</td></tr>
+      <tr data-tip="Toggle synchronized input — keystrokes are sent to all panes in the current tab simultaneously" data-example="Ctrl+t, s"><td>s</td><td>Toggle sync tabs</td></tr>
+      <tr data-tip="Break the focused pane out of the current tab into a new tab" data-example="Ctrl+t, b"><td>b</td><td>Break pane to new tab</td></tr>
+      <tr data-tip="Send the focused pane to the previous tab" data-example="Ctrl+t, j"><td>j</td><td>Move pane to prev tab</td></tr>
+      <tr data-tip="Send the focused pane to the next tab" data-example="Ctrl+t, k"><td>k</td><td>Move pane to next tab</td></tr>
+      <tr data-tip="Jump directly to a numbered tab — 1 is the leftmost tab" data-example="Ctrl+t, 3"><td>1–9</td><td>Go to tab N</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       RESIZE PANES
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header yellow" data-cmd="Resize Panes" data-tip="Enter Resize mode with Ctrl+n. Grow or shrink the focused pane in any direction. Adjacent panes adjust automatically to fill the space. Hold the key to resize continuously.">Resize Panes (Ctrl+n → key)</div>
+    <table>
+      <tr data-tip="Grow the focused pane to the left — shrinks the left neighbor" data-example="Ctrl+n, h"><td>h / ←</td><td>Grow pane left</td></tr>
+      <tr data-tip="Grow the focused pane downward — shrinks the pane below" data-example="Ctrl+n, j"><td>j / ↓</td><td>Grow pane down</td></tr>
+      <tr data-tip="Grow the focused pane upward — shrinks the pane above" data-example="Ctrl+n, k"><td>k / ↑</td><td>Grow pane up</td></tr>
+      <tr data-tip="Grow the focused pane to the right — shrinks the right neighbor" data-example="Ctrl+n, l"><td>l / →</td><td>Grow pane right</td></tr>
+      <tr data-tip="Shrink the focused pane from the left — grows the left neighbor" data-example="Ctrl+n, H"><td>H</td><td>Shrink pane left</td></tr>
+      <tr data-tip="Shrink the focused pane from the bottom — grows the pane below" data-example="Ctrl+n, J"><td>J</td><td>Shrink pane down</td></tr>
+      <tr data-tip="Shrink the focused pane from the top — grows the pane above" data-example="Ctrl+n, K"><td>K</td><td>Shrink pane up</td></tr>
+      <tr data-tip="Shrink the focused pane from the right — grows the right neighbor" data-example="Ctrl+n, L"><td>L</td><td>Shrink pane right</td></tr>
+      <tr data-tip="Increase the overall size of the focused pane by one step in all directions" data-example="Ctrl+n, +"><td>+</td><td>Increase size</td></tr>
+      <tr data-tip="Decrease the overall size of the focused pane by one step" data-example="Ctrl+n, -"><td>-</td><td>Decrease size</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       MOVE PANES
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header purple" data-cmd="Move Panes" data-tip="Enter Move mode with Ctrl+h. Swap the focused pane with its neighbor in any direction. The pane keeps its content and running process — only its position in the layout changes.">Move Panes (Ctrl+h → key)</div>
+    <table>
+      <tr data-tip="Swap the focused pane with the pane to its left" data-example="Ctrl+h, h"><td>h / ←</td><td>Move pane left</td></tr>
+      <tr data-tip="Swap the focused pane with the pane below it" data-example="Ctrl+h, j"><td>j / ↓</td><td>Move pane down</td></tr>
+      <tr data-tip="Swap the focused pane with the pane above it" data-example="Ctrl+h, k"><td>k / ↑</td><td>Move pane up</td></tr>
+      <tr data-tip="Swap the focused pane with the pane to its right" data-example="Ctrl+h, l"><td>l / →</td><td>Move pane right</td></tr>
+      <tr data-tip="Cycle the focused pane forward through all pane positions in the layout" data-example="Ctrl+h, n"><td>n</td><td>Move pane to next position</td></tr>
+      <tr data-tip="Cycle the focused pane backward through all pane positions in the layout" data-example="Ctrl+h, p"><td>p</td><td>Move pane to prev position</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SCROLL & SEARCH
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header red" data-cmd="Scroll & Search" data-tip="Enter Scroll mode with Ctrl+s. Scroll through the pane's scrollback buffer without needing a mouse. Press / to search the scrollback. Press e to edit the full buffer in $EDITOR. Press Esc to return to Normal.">Scroll &amp; Search (Ctrl+s → key)</div>
+    <table>
+      <tr data-tip="Scroll down one line through the pane's scrollback history" data-example="Ctrl+s, j"><td>j / ↓</td><td>Scroll down</td></tr>
+      <tr data-tip="Scroll up one line through the pane's scrollback history" data-example="Ctrl+s, k"><td>k / ↑</td><td>Scroll up</td></tr>
+      <tr data-tip="Scroll down one full page (Ctrl+f or PageDown)" data-example="Ctrl+s, Ctrl+f"><td>Ctrl+f / PageDown</td><td>Page down</td></tr>
+      <tr data-tip="Scroll up one full page (Ctrl+b or PageUp)" data-example="Ctrl+s, Ctrl+b"><td>Ctrl+b / PageUp</td><td>Page up</td></tr>
+      <tr data-tip="Scroll down half a screen at a time" data-example="Ctrl+s, d"><td>d</td><td>Half page down</td></tr>
+      <tr data-tip="Scroll up half a screen at a time" data-example="Ctrl+s, u"><td>u</td><td>Half page up</td></tr>
+      <tr data-tip="Jump to the very top of the scrollback buffer (oldest output)" data-example="Ctrl+s, g"><td>g / Home</td><td>Go to top</td></tr>
+      <tr data-tip="Jump to the very bottom of the scrollback buffer (most recent output)" data-example="Ctrl+s, G"><td>G / End</td><td>Go to bottom</td></tr>
+      <tr data-tip="Enter search mode within the scrollback — type a query and press Enter. Results are highlighted in the buffer." data-example="Ctrl+s, /"><td>/</td><td>Search scrollback</td></tr>
+      <tr data-tip="Jump to the next search match in the scrollback (wraps around)" data-example="Ctrl+s, n"><td>n</td><td>Next search match</td></tr>
+      <tr data-tip="Jump to the previous search match in the scrollback" data-example="Ctrl+s, p"><td>p</td><td>Previous search match</td></tr>
+      <tr data-tip="Open the entire scrollback buffer in your $EDITOR (e.g., vim, nvim) for reading, copying, or searching. Returns to Zellij when the editor exits." data-example="Ctrl+s, e"><td>e</td><td>Edit scrollback in $EDITOR</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SESSION MANAGEMENT
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header green" data-cmd="Session Management" data-tip="Enter Session mode with Ctrl+o. Sessions persist after detaching — reconnect later with 'zellij attach'. Multiple sessions can run simultaneously, each with their own tabs and panes.">Session Management (Ctrl+o → key)</div>
+    <table>
+      <tr data-tip="Detach from the current session — it keeps running in the background. Reconnect later with 'zellij attach <session-name>'" data-example="Ctrl+o, d"><td>d</td><td>Detach from session</td></tr>
+      <tr data-tip="Open the Zellij session manager UI — browse, switch, and create sessions interactively" data-example="Ctrl+o, w"><td>w</td><td>Open session manager</td></tr>
+      <tr data-tip="Create a new Zellij session and switch to it" data-example="Ctrl+o, c"><td>c</td><td>Create new session</td></tr>
+      <tr data-tip="Switch to a different existing session — opens a fuzzy picker" data-example="Ctrl+o, s"><td>s</td><td>Switch session</td></tr>
+      <tr data-tip="Kill and delete the current session — all panes are closed permanently" data-example="Ctrl+o, x" data-danger="Permanently kills the session and all its panes"><td>x</td><td>Kill session</td></tr>
+      <tr data-tip="Rename the current session — type a name and press Enter to confirm" data-example="Ctrl+o, r"><td>r</td><td>Rename session</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       CLI COMMANDS
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header" data-cmd="CLI Commands" data-tip="Run these in your terminal before starting Zellij, or in a shell pane inside Zellij. Most session management can also be done via CLI — useful in scripts and automation.">CLI Commands</div>
+    <table>
+      <tr data-tip="Start Zellij with the default layout and a new unnamed session" data-example="zellij"><td>zellij</td><td>Start Zellij</td></tr>
+      <tr data-tip="Start Zellij using a named layout (built-in: default, compact, disable-status-bar)" data-example="zellij -l compact"><td>zellij -l &lt;layout&gt;</td><td>Start with a layout</td></tr>
+      <tr data-tip="Start a new Zellij session with a specific name, or attach if it already exists" data-example="zellij -s mywork"><td>zellij -s &lt;name&gt;</td><td>Start / attach named session</td></tr>
+      <tr data-tip="Attach to an existing named session that is running in the background" data-example="zellij attach mywork"><td>zellij attach &lt;name&gt;</td><td>Attach to session</td></tr>
+      <tr data-tip="List all running Zellij sessions with their names and status" data-example="zellij list-sessions"><td>zellij list-sessions</td><td>List sessions</td></tr>
+      <tr data-tip="Shorthand alias for 'zellij list-sessions'" data-example="zellij ls"><td>zellij ls</td><td>List sessions (short)</td></tr>
+      <tr data-tip="Terminate a named session and all its panes" data-example="zellij kill-session mywork" data-danger="Permanently terminates the session and all running processes in it"><td>zellij kill-session &lt;name&gt;</td><td>Kill a session</td></tr>
+      <tr data-tip="Terminate all running Zellij sessions at once" data-example="zellij kill-all-sessions" data-danger="Terminates ALL sessions — use with care"><td>zellij kill-all-sessions</td><td>Kill all sessions</td></tr>
+      <tr data-tip="Remove a session's stored state from disk (for sessions that have already exited)" data-example="zellij delete-session mywork"><td>zellij delete-session &lt;name&gt;</td><td>Delete session</td></tr>
+      <tr data-tip="Delete all stored session state from disk" data-example="zellij delete-all-sessions"><td>zellij delete-all-sessions</td><td>Delete all sessions</td></tr>
+      <tr data-tip="Print the full default Zellij configuration (YAML) to stdout — redirect to a file to customize it" data-example="zellij setup --dump-config"><td>zellij setup --dump-config</td><td>Print default config</td></tr>
+      <tr data-tip="Print a named built-in layout to stdout — useful as a starting point for custom layouts" data-example="zellij setup --dump-layout default"><td>zellij setup --dump-layout &lt;name&gt;</td><td>Print built-in layout</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       LAYOUTS & CONFIGURATION
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header teal" data-cmd="Layouts & Configuration" data-tip="Zellij layouts are KDL files that define the initial pane/tab arrangement. Store them in ~/.config/zellij/layouts/. The config file lives at ~/.config/zellij/config.kdl (or wherever $ZELLIJ_CONFIG_DIR points).">Layouts &amp; Configuration</div>
+    <table>
+      <tr data-tip="Built-in layouts included with Zellij — use them directly with 'zellij -l <name>'" data-example="zellij -l compact"><td>default / compact</td><td>Built-in layouts</td></tr>
+      <tr data-tip="Store custom layout files here — Zellij will find them by name automatically" data-example="~/.config/zellij/layouts/"><td>~/.config/zellij/layouts/</td><td>Custom layout directory</td></tr>
+      <tr data-tip="The main Zellij config file — customize keybindings, theme, default shell, scrollback size, etc." data-example="~/.config/zellij/config.kdl"><td>~/.config/zellij/config.kdl</td><td>Config file location</td></tr>
+      <tr data-tip="Override the config file location with an environment variable" data-example="export ZELLIJ_CONFIG_DIR=~/.zellij"><td>$ZELLIJ_CONFIG_DIR</td><td>Override config directory</td></tr>
+      <tr data-tip="Auto-start Zellij when opening a terminal — add to ~/.zshrc or ~/.bashrc. Only starts if not already inside a Zellij session." data-example="eval $(zellij setup --generate-auto-start zsh)"><td>zellij setup --generate-auto-start</td><td>Auto-start shell integration</td></tr>
+      <tr data-tip="Compact layout hides the status bar and tab bar — maximizes terminal space" data-example="zellij -l compact"><td>zellij -l compact</td><td>Compact (no status bar)</td></tr>
+      <tr data-tip="Inside a KDL layout file, set the default shell for all panes" data-example="command &quot;fish&quot;"><td>command &quot;&lt;shell&gt;&quot;</td><td>Set pane shell in layout</td></tr>
+      <tr data-tip="Check the Zellij version installed on your system" data-example="zellij --version"><td>zellij --version</td><td>Show version</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       PLUGINS & TIPS
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header" data-cmd="Plugins & Tips" data-tip="Zellij has a WebAssembly plugin system. Plugins can add new panes, UI elements, and actions. The session manager (Ctrl+o → w) and file browser are examples of built-in plugins.">Plugins &amp; Tips</div>
+    <table>
+      <tr data-tip="Zellij sets this env var to '1' inside all its panes — use it in scripts to detect if you're inside a session" data-example="echo $ZELLIJ"><td>$ZELLIJ</td><td>Detect if inside Zellij</td></tr>
+      <tr data-tip="Zellij sets this to the session name — useful in your prompt or scripts" data-example="echo $ZELLIJ_SESSION_NAME"><td>$ZELLIJ_SESSION_NAME</td><td>Current session name</td></tr>
+      <tr data-tip="Send an action to Zellij from inside a pane — useful in scripts and aliases" data-example="zellij action new-tab"><td>zellij action &lt;action&gt;</td><td>Send action from CLI</td></tr>
+      <tr data-tip="Open a new tab with the given name via CLI action — useful in scripts" data-example="zellij action new-tab --name mytab"><td>zellij action new-tab --name &lt;name&gt;</td><td>New tab (via action)</td></tr>
+      <tr data-tip="Close the focused pane from a CLI action — scriptable pane control" data-example="zellij action close-pane"><td>zellij action close-pane</td><td>Close pane (via action)</td></tr>
+      <tr data-tip="Zellij stores scrollback and session state here — safe to delete if you want a clean slate" data-example="~/.cache/zellij/"><td>~/.cache/zellij/</td><td>Session cache directory</td></tr>
+      <tr data-tip="Plugins are WebAssembly (.wasm) files — community plugins available on GitHub" data-example="~/.config/zellij/plugins/"><td>~/.config/zellij/plugins/</td><td>Plugin directory</td></tr>
+      <tr data-tip="Strider is Zellij's built-in file explorer plugin — navigate and open files without leaving the terminal" data-example="zellij -l strider"><td>zellij -l strider</td><td>Built-in file explorer (Strider)</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  Zellij Cheatsheet · Complete terminal multiplexer reference · Updated March 2026 · <a href="https://zellij.dev" target="_blank" rel="noopener" style="color:#484f58;">zellij.dev</a>
+  <br>
+  <span style="font-size:1rem; color:#c9d1d9;">Also check out: <a href="https://neovimcheatsheet.com" target="_blank" rel="noopener" style="color:#c9d1d9;">Neovim Cheatsheet</a> · <a href="https://linuxkernel.com" target="_blank" rel="noopener" style="color:#c9d1d9;">Linux Kernel</a></span>
+</footer>
+
+<script>
+  const searchInput  = document.getElementById('search');
+  const searchClear  = document.getElementById('searchClear');
+  const countEl      = document.getElementById('count');
+  const cards        = document.querySelectorAll('.card');
+
+  // 1. Store original innerHTML + textContent per cell
+  const originalCells = [];
+  cards.forEach(card => {
+    card.querySelectorAll('tr').forEach(row => {
+      const cells = row.querySelectorAll('td');
+      originalCells.push({
+        row, card,
+        htmls: Array.from(cells).map(td => td.innerHTML),
+        texts: Array.from(cells).map(td => td.textContent)
+      });
+    });
+  });
+
+  // 2. Post-process: style <placeholders> and inject danger badges
+  originalCells.forEach(({ row, htmls }) => {
+    const cmdCell = row.querySelector('td:first-child');
+    if (!cmdCell) return;
+    let inner = htmls[0].replace(/&lt;([^&]+)&gt;/g,
+      '<span class="placeholder">&lt;$1&gt;</span>');
+    if (row.dataset.danger) {
+      inner = `<div class="cmd-inner"><span class="cmd-text">${inner}</span><span class="danger-badge" title="${row.dataset.danger}">⚠</span></div>`;
+    }
+    cmdCell.innerHTML = inner;
+    htmls[0] = inner;
+  });
+
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const re = new RegExp(`(${escapeRegex(query)})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input'));
+    searchInput.focus();
+  });
+
+  searchInput.addEventListener('input', () => {
+    searchClear.classList.toggle('visible', searchInput.value.length > 0);
+    const query = searchInput.value.trim().toLowerCase();
+
+    // Reset
+    originalCells.forEach(({ row }) => row.classList.remove('hidden-row'));
+    cards.forEach(c => c.classList.remove('hidden'));
+    originalCells.forEach(({ row, htmls }) => {
+      row.querySelectorAll('td').forEach((td, i) => { td.innerHTML = htmls[i]; });
+    });
+
+    if (!query) {
+      countEl.textContent = '';
+      countEl.className = 'search-count';
+      return;
+    }
+
+    let totalVisible = 0;
+    originalCells.forEach(({ row, card, texts }) => {
+      const combined = texts.join(' ').toLowerCase();
+      if (combined.includes(query)) {
+        totalVisible++;
+        const cells = row.querySelectorAll('td');
+        cells.forEach((td, i) => {
+          td.innerHTML = highlight(texts[i], searchInput.value.trim());
+        });
+      } else {
+        row.classList.add('hidden-row');
+      }
+    });
+
+    cards.forEach(card => {
+      if (card.querySelectorAll('tr:not(.hidden-row)').length === 0)
+        card.classList.add('hidden');
+    });
+
+    if (totalVisible === 0) {
+      countEl.textContent = 'No matches found';
+      countEl.className = 'search-count no-results';
+    } else {
+      countEl.textContent = `${totalVisible} result${totalVisible !== 1 ? 's' : ''} found`;
+      countEl.className = 'search-count';
+    }
+  });
+</script>
+
+<script>
+  // ── Tooltip system ────────────────────────────────────────────────────────
+  const tooltip       = document.getElementById('tooltip');
+  const tooltipCmd    = document.getElementById('tooltipCmd');
+  const tooltipDesc   = document.getElementById('tooltipDesc');
+  const tooltipCode   = document.getElementById('tooltipCode');
+  const tooltipCopy   = document.getElementById('tooltipCopy');
+  const tooltipClose  = document.getElementById('tooltipClose');
+  const tooltipDanger = document.getElementById('tooltipDanger');
+  const tooltipToggle = document.getElementById('tooltipToggle');
+  const tipsEnabled   = () => tooltipToggle.checked;
+
+  tooltipToggle.addEventListener('change', () => {
+    if (!tooltipToggle.checked) closeTooltip();
+  });
+
+  let showTimer = null;
+  let hideTimer = null;
+  let tipVisible = false;
+
+  const tooltipExampleSection = document.getElementById('tooltipExampleSection');
+
+  function openTooltip(el) {
+    // Danger banner
+    const danger = el.dataset.danger || '';
+    if (danger) {
+      tooltipDanger.textContent = '⚠ ' + danger;
+      tooltipDanger.style.display = 'flex';
+    } else {
+      tooltipDanger.style.display = 'none';
+    }
+
+    // Command label
+    tooltipCmd.textContent = el.querySelector('td:first-child')?.textContent
+      || el.dataset.cmd
+      || '';
+
+    // Description
+    tooltipDesc.textContent = el.dataset.tip || '';
+
+    // Example
+    const ex = el.dataset.example || '';
+    if (ex) {
+      tooltipCode.textContent = ex;
+      tooltipExampleSection.style.display = 'block';
+    } else {
+      tooltipExampleSection.style.display = 'none';
+    }
+    tooltipCopy.textContent = 'Copy';
+    tooltipCopy.classList.remove('copied');
+    tooltip.classList.add('visible');
+    tipVisible = true;
+
+    requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect();
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      let x = rect.right + 12;
+      let y = rect.top;
+      if (x + tw > window.innerWidth - 12) x = rect.left - tw - 12;
+      if (y + th > window.innerHeight - 12) y = window.innerHeight - th - 12;
+      tooltip.style.left = Math.max(8, x) + 'px';
+      tooltip.style.top  = Math.max(8, y) + 'px';
+    });
+  }
+
+  function closeTooltip() {
+    tooltip.classList.remove('visible');
+    tipVisible = false;
+  }
+
+  function scheduleClose() { hideTimer = setTimeout(closeTooltip, 120); }
+  function cancelClose()   { clearTimeout(hideTimer); }
+
+  document.querySelectorAll('tr[data-tip]').forEach(row => {
+    row.addEventListener('click', e => {
+      if (!tipsEnabled() || tooltip.contains(e.target)) return;
+      e.stopPropagation();
+      cancelClose();
+      clearTimeout(showTimer);
+      openTooltip(row);
+    });
+    row.addEventListener('mouseenter', () => {
+      cancelClose();
+      clearTimeout(showTimer);
+      if (!tipsEnabled()) return;
+      showTimer = setTimeout(() => openTooltip(row), 2000);
+    });
+    row.addEventListener('mouseleave', e => {
+      clearTimeout(showTimer);
+      if (tipVisible && !tooltip.contains(e.relatedTarget)) scheduleClose();
+    });
+  });
+
+  // ── Card headers + legend badges ──────────────────────────────────────
+  const tipTargets = [
+    ...document.querySelectorAll('.card-header[data-tip]'),
+    ...document.querySelectorAll('.legend span[data-tip]')
+  ];
+
+  tipTargets.forEach(el => {
+    el.addEventListener('click', e => {
+      if (!tipsEnabled() || tooltip.contains(e.target)) return;
+      e.stopPropagation();
+      cancelClose();
+      clearTimeout(showTimer);
+      openTooltip(el);
+    });
+    el.addEventListener('mouseenter', () => {
+      cancelClose();
+      clearTimeout(showTimer);
+      if (!tipsEnabled()) return;
+      showTimer = setTimeout(() => openTooltip(el), 400);
+    });
+    el.addEventListener('mouseleave', e => {
+      clearTimeout(showTimer);
+      if (tipVisible && !tooltip.contains(e.relatedTarget)) scheduleClose();
+    });
+  });
+
+  tooltip.addEventListener('mouseenter', cancelClose);
+  tooltip.addEventListener('mouseleave', e => {
+    const over = e.relatedTarget;
+    if (!over || (!over.closest('tr[data-tip]') && !over.closest('.card-header[data-tip]') && !over.closest('.legend span[data-tip]'))) scheduleClose();
+  });
+
+  tooltipClose.addEventListener('click', closeTooltip);
+
+  document.addEventListener('click', e => {
+    if (tipVisible && !tooltip.contains(e.target)) closeTooltip();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && tipVisible) closeTooltip();
+  });
+
+  tooltipCopy.addEventListener('click', () => {
+    navigator.clipboard.writeText(tooltipCode.textContent).then(() => {
+      tooltipCopy.textContent = 'Copied ✓';
+      tooltipCopy.classList.add('copied');
+      setTimeout(() => {
+        tooltipCopy.textContent = 'Copy';
+        tooltipCopy.classList.remove('copied');
+      }, 2000);
+    });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+  const crabBtn = document.getElementById('crabBtn');
+  let crabBusy = false;
+
+  crabBtn.addEventListener('click', () => {
+    if (crabBusy) return;
+    crabBusy = true;
+
+    const rect = crabBtn.getBoundingClientRect();
+    const origin = {
+      x: (rect.left + rect.width  / 2) / window.innerWidth,
+      y: (rect.top  + rect.height / 2) / window.innerHeight,
+    };
+
+    const colors = ['#c084fc', '#a78bfa', '#ffffff', '#e3b341', '#f85149', '#818cf8', '#e2e8f0'];
+
+    crabBtn.classList.add('exploding');
+
+    setTimeout(() => {
+      confetti({ particleCount: 140, spread: 360, startVelocity: 50,
+                 origin, colors, ticks: 220, scalar: 1.1 });
+    }, 180);
+
+    setTimeout(() => {
+      confetti({ particleCount: 70, spread: 200, startVelocity: 28,
+                 origin, colors, ticks: 180, scalar: 0.85 });
+    }, 320);
+
+    setTimeout(() => {
+      confetti({ particleCount: 40, spread: 120, startVelocity: 18,
+                 origin, colors: ['#c084fc', '#a78bfa', '#ffffff'],
+                 ticks: 120, scalar: 0.65 });
+    }, 480);
+
+    setTimeout(() => {
+      crabBtn.classList.remove('exploding');
+      crabBtn.classList.add('reappearing');
+      setTimeout(() => {
+        crabBtn.classList.remove('reappearing');
+        crabBusy = false;
+      }, 450);
+    }, 750);
+  });
+</script>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+<script>
+  const themeToggle = document.getElementById('themeToggle');
+
+  // Apply saved preference on load
+  const savedTheme = localStorage.getItem('zellij-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+    document.body.classList.add('light');
+  }
+  document.documentElement.classList.remove('preload-light');
+
+  function updateIcon() {
+    themeToggle.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
+  }
+  updateIcon();
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    localStorage.setItem('zellij-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    updateIcon();
+  });
+</script>
+
+</body>
+</html>

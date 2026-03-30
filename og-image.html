@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #0f1117;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Subtle grid pattern */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(192,132,252,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(192,132,252,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Glow orbs */
+  .orb1 {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(192,132,252,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .orb2 {
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(129,140,248,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    padding: 60px 80px;
+  }
+
+  .eyebrow {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #8b949e;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1.05;
+    color: #e2e8f0;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+  }
+  .title .accent {
+    color: #c084fc;
+  }
+
+  .tagline {
+    font-size: 26px;
+    color: #8b949e;
+    margin-bottom: 48px;
+    line-height: 1.4;
+  }
+
+  .pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .pill {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: #e3b341;
+    letter-spacing: 0.5px;
+  }
+  .pill.purple { color: #c084fc; border-color: #c084fc44; background: #c084fc11; }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 18px;
+    color: #484f58;
+  }
+  .meta .dot { color: #30363d; }
+  .meta .url { color: #c084fc; font-weight: 600; }
+
+  /* Bottom accent bar */
+  .bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #c084fc, #818cf8, #c084fc);
+    z-index: 20;
+  }
+</style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+
+  <div class="content">
+    <div class="eyebrow">Terminal Multiplexer Reference</div>
+    <div class="title"><span class="accent">Zellij</span><br>Cheatsheet</div>
+    <div class="tagline">Every keybinding, mode, and CLI command — searchable &amp; free</div>
+    <div class="pills">
+      <div class="pill purple">Ctrl+p → Pane</div>
+      <div class="pill purple">Ctrl+t → Tab</div>
+      <div class="pill purple">Ctrl+s → Scroll</div>
+      <div class="pill purple">Ctrl+o → Session</div>
+      <div class="pill">Alt+h/j/k/l</div>
+      <div class="pill">zellij attach</div>
+    </div>
+    <div class="meta">
+      <span class="url">zellijcheatsheet.com</span>
+      <span class="dot">·</span>
+      <span>11 sections</span>
+      <span class="dot">·</span>
+      <span>100+ commands</span>
+      <span class="dot">·</span>
+      <span>Written in 🦀 Rust</span>
+    </div>
+  </div>
+
+  <div class="bar"></div>
+</body>
+</html>
