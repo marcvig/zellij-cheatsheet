@@ -808,7 +808,7 @@
   const REGISTRY = 'https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json';
   const CURRENT_DOMAIN = 'zellij-cheatsheet.pages.dev';
 
-  fetch(REGISTRY)
+  fetch(REGISTRY, { cache: 'no-cache' })
     .then(r => r.json())
     .then(sites => {
       const others = sites.filter(s => s.domain !== CURRENT_DOMAIN);
