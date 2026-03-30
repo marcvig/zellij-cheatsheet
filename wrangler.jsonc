@@ -2,11 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zellij-cheatsheet",
   "compatibility_date": "2025-09-27",
+  "pages_build_output_dir": ".",
   "observability": {
     "enabled": true
-  },
-  "assets": {
-    "directory": "."
   },
   "compatibility_flags": [
     "nodejs_compat"
