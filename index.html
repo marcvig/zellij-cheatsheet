@@ -800,8 +800,26 @@
 <footer>
   Zellij Cheatsheet · Complete terminal multiplexer reference · Updated March 2026 · <a href="https://zellij.dev" target="_blank" rel="noopener" style="color:#484f58;">zellij.dev</a>
   <br>
-  <span style="font-size:1rem; color:#c9d1d9;">Also check out: <a href="https://neovimcheatsheet.com" target="_blank" rel="noopener" style="color:#c9d1d9;">Neovim Cheatsheet</a> · <a href="https://linuxkernel.com" target="_blank" rel="noopener" style="color:#c9d1d9;">Linux Kernel</a></span>
+  <span id="sibling-links" style="font-size:1rem; color:#c9d1d9;"></span>
 </footer>
+
+<script>
+  // Centralized registry — update cheatsheets.json in marcvig/cheatsheet-registry to add/change sites
+  const REGISTRY = 'https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json';
+  const CURRENT_DOMAIN = 'zellij-cheatsheet.pages.dev';
+
+  fetch(REGISTRY)
+    .then(r => r.json())
+    .then(sites => {
+      const others = sites.filter(s => s.domain !== CURRENT_DOMAIN);
+      if (!others.length) return;
+      const links = others.map(s =>
+        `<a href="${s.url}" target="_blank" rel="noopener" style="color:#c9d1d9;">${s.name}</a>`
+      ).join(' · ');
+      document.getElementById('sibling-links').innerHTML = 'Also check out: ' + links;
+    })
+    .catch(() => {}); // fail silently — footer just stays empty
+</script>
 
 <script>
   const searchInput  = document.getElementById('search');
