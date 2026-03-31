@@ -665,21 +665,21 @@
        ALT QUICK KEYS (NORMAL MODE)
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in Normal mode without entering a sub-mode. They're the fastest way to navigate panes and tabs — no mode switch needed. Focus moves immediately on keypress.">Normal Mode — Alt+ Quick Keys</div>
+    <div class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in any mode (except Locked) without entering a sub-mode. They're the fastest way to navigate panes and tabs — no mode switch needed. Focus moves immediately on keypress.">Normal Mode — Alt+ Quick Keys</div>
     <table>
-      <tr data-tip="Move focus to the pane on the left — wraps around if at the edge" data-example="Alt+h"><td>Alt+h / Alt+←</td><td>Focus pane left</td></tr>
+      <tr data-tip="Move focus to the pane on the left — if already at the leftmost pane, switches to the previous tab (MoveFocusOrTab)" data-example="Alt+h"><td>Alt+h / Alt+←</td><td>Focus pane left (or prev tab)</td></tr>
       <tr data-tip="Move focus to the pane below — wraps around if at the edge" data-example="Alt+j"><td>Alt+j / Alt+↓</td><td>Focus pane down</td></tr>
       <tr data-tip="Move focus to the pane above — wraps around if at the edge" data-example="Alt+k"><td>Alt+k / Alt+↑</td><td>Focus pane up</td></tr>
-      <tr data-tip="Move focus to the pane on the right — wraps around if at the edge" data-example="Alt+l"><td>Alt+l / Alt+→</td><td>Focus pane right</td></tr>
-      <tr data-tip="Switch to the previous tab instantly — no Tab mode needed" data-example="Alt+["><td>Alt+[</td><td>Previous tab</td></tr>
-      <tr data-tip="Switch to the next tab instantly — no Tab mode needed" data-example="Alt+]"><td>Alt+]</td><td>Next tab</td></tr>
-      <tr data-tip="Jump directly to tab number 1-9" data-example="Alt+1"><td>Alt+1–9</td><td>Go to tab N</td></tr>
+      <tr data-tip="Move focus to the pane on the right — if already at the rightmost pane, switches to the next tab (MoveFocusOrTab)" data-example="Alt+l"><td>Alt+l / Alt+→</td><td>Focus pane right (or next tab)</td></tr>
       <tr data-tip="Open a new pane in the focused area — uses a shell defined by $SHELL" data-example="Alt+n"><td>Alt+n</td><td>New pane (quick)</td></tr>
       <tr data-tip="Toggle showing/hiding all floating panes at once" data-example="Alt+f"><td>Alt+f</td><td>Toggle floating panes</td></tr>
-      <tr data-tip="Increase the active pane size toward the left" data-example="Alt+H"><td>Alt+H</td><td>Resize pane left</td></tr>
-      <tr data-tip="Increase the active pane size downward" data-example="Alt+J"><td>Alt+J</td><td>Resize pane down</td></tr>
-      <tr data-tip="Increase the active pane size upward" data-example="Alt+K"><td>Alt+K</td><td>Resize pane up</td></tr>
-      <tr data-tip="Increase the active pane size to the right" data-example="Alt+L"><td>Alt+L</td><td>Resize pane right</td></tr>
+      <tr data-tip="Move the current tab one position to the left in the tab bar" data-example="Alt+i"><td>Alt+i</td><td>Move tab left</td></tr>
+      <tr data-tip="Move the current tab one position to the right in the tab bar" data-example="Alt+o"><td>Alt+o</td><td>Move tab right</td></tr>
+      <tr data-tip="Cycle to the previous swap layout — swap layouts rearrange pane positions within the current tab" data-example="Alt+["><td>Alt+[</td><td>Previous swap layout</td></tr>
+      <tr data-tip="Cycle to the next swap layout — swap layouts rearrange pane positions within the current tab" data-example="Alt+]"><td>Alt+]</td><td>Next swap layout</td></tr>
+      <tr data-tip="Increase the size of the focused pane in all directions by one step" data-example="Alt+="><td>Alt+= / Alt++</td><td>Resize pane (increase)</td></tr>
+      <tr data-tip="Decrease the size of the focused pane in all directions by one step" data-example="Alt+-"><td>Alt+-</td><td>Resize pane (decrease)</td></tr>
+      <tr data-tip="Toggle the focused pane's membership in the current pane group — grouped panes resize together" data-example="Alt+p"><td>Alt+p</td><td>Toggle pane in group</td></tr>
     </table>
   </div>
 
@@ -693,15 +693,17 @@
       <tr data-tip="Move pane focus to the pane below" data-example="Ctrl+p, j"><td>j / ↓</td><td>Focus pane down</td></tr>
       <tr data-tip="Move pane focus to the pane above" data-example="Ctrl+p, k"><td>k / ↑</td><td>Focus pane up</td></tr>
       <tr data-tip="Move pane focus to the right neighbor" data-example="Ctrl+p, l"><td>l / →</td><td>Focus pane right</td></tr>
+      <tr data-tip="Cycle focus forward through all panes in the current tab" data-example="Ctrl+p, p"><td>p</td><td>Cycle pane focus</td></tr>
       <tr data-tip="Open a new pane using the default shell — placed automatically by layout" data-example="Ctrl+p, n"><td>n</td><td>New pane</td></tr>
       <tr data-tip="Open a new pane split below the current one (horizontal split)" data-example="Ctrl+p, d"><td>d</td><td>New pane (split down)</td></tr>
       <tr data-tip="Open a new pane split to the right of the current one (vertical split)" data-example="Ctrl+p, r"><td>r</td><td>New pane (split right)</td></tr>
+      <tr data-tip="Open a new stacked pane below the current one — stacked panes share the same space and can be cycled through" data-example="Ctrl+p, s"><td>s</td><td>New pane (stacked)</td></tr>
       <tr data-tip="Close the currently focused pane — prompts if it has a running process" data-example="Ctrl+p, x" data-danger="Closes the pane and terminates its running process"><td>x</td><td>Close pane</td></tr>
       <tr data-tip="Toggle the current pane to occupy the entire terminal window — press again to restore" data-example="Ctrl+p, f"><td>f</td><td>Toggle fullscreen</td></tr>
-      <tr data-tip="Toggle the current pane between floating (overlaid) and embedded (in the layout) modes" data-example="Ctrl+p, z"><td>z</td><td>Toggle floating pane</td></tr>
+      <tr data-tip="Toggle all pane frame borders on/off globally — useful for a cleaner, minimal look" data-example="Ctrl+p, z"><td>z</td><td>Toggle pane frames</td></tr>
+      <tr data-tip="Show or hide all floating panes at once — toggles the entire floating layer" data-example="Ctrl+p, w"><td>w</td><td>Toggle floating panes</td></tr>
       <tr data-tip="Toggle pane embedding — takes a floating pane and embeds it into the tiled layout, or vice versa" data-example="Ctrl+p, e"><td>e</td><td>Embed / un-embed pane</td></tr>
       <tr data-tip="Rename the current pane — type a name and press Enter to confirm" data-example="Ctrl+p, c"><td>c</td><td>Rename pane</td></tr>
-      <tr data-tip="Toggle the pane frame borders on/off — useful for a cleaner look" data-example="Ctrl+p, w"><td>w</td><td>Toggle pane frames</td></tr>
       <tr data-tip="Toggle pane pinning — a pinned floating pane stays visible even when switching focus" data-example="Ctrl+p, i"><td>i</td><td>Toggle pin pane</td></tr>
     </table>
   </div>
@@ -718,9 +720,10 @@
       <tr data-tip="Close the current tab and all its panes" data-example="Ctrl+t, x" data-danger="Closes the entire tab and all panes within it"><td>x</td><td>Close tab</td></tr>
       <tr data-tip="Rename the current tab — type a name and press Enter to confirm" data-example="Ctrl+t, r"><td>r</td><td>Rename tab</td></tr>
       <tr data-tip="Toggle synchronized input — keystrokes are sent to all panes in the current tab simultaneously" data-example="Ctrl+t, s"><td>s</td><td>Toggle sync tabs</td></tr>
-      <tr data-tip="Break the focused pane out of the current tab into a new tab" data-example="Ctrl+t, b"><td>b</td><td>Break pane to new tab</td></tr>
-      <tr data-tip="Send the focused pane to the previous tab" data-example="Ctrl+t, j"><td>j</td><td>Move pane to prev tab</td></tr>
-      <tr data-tip="Send the focused pane to the next tab" data-example="Ctrl+t, k"><td>k</td><td>Move pane to next tab</td></tr>
+      <tr data-tip="Break the focused pane out of the current tab into a brand new tab" data-example="Ctrl+t, b"><td>b</td><td>Break pane to new tab</td></tr>
+      <tr data-tip="Send the focused pane to the tab on the left" data-example="Ctrl+t, ["><td>[</td><td>Break pane to left tab</td></tr>
+      <tr data-tip="Send the focused pane to the tab on the right" data-example="Ctrl+t, ]"><td>]</td><td>Break pane to right tab</td></tr>
+      <tr data-tip="Toggle between the current tab and the last active tab — quick back-and-forth" data-example="Ctrl+t, Tab"><td>Tab</td><td>Toggle last tab</td></tr>
       <tr data-tip="Jump directly to a numbered tab — 1 is the leftmost tab" data-example="Ctrl+t, 3"><td>1–9</td><td>Go to tab N</td></tr>
     </table>
   </div>
@@ -788,10 +791,11 @@
     <table>
       <tr data-tip="Detach from the current session — it keeps running in the background. Reconnect later with 'zellij attach <session-name>'" data-example="Ctrl+o, d"><td>d</td><td>Detach from session</td></tr>
       <tr data-tip="Open the Zellij session manager UI — browse, switch, and create sessions interactively" data-example="Ctrl+o, w"><td>w</td><td>Open session manager</td></tr>
-      <tr data-tip="Create a new Zellij session and switch to it" data-example="Ctrl+o, c"><td>c</td><td>Create new session</td></tr>
-      <tr data-tip="Switch to a different existing session — opens a fuzzy picker" data-example="Ctrl+o, s"><td>s</td><td>Switch session</td></tr>
-      <tr data-tip="Kill and delete the current session — all panes are closed permanently" data-example="Ctrl+o, x" data-danger="Permanently kills the session and all its panes"><td>x</td><td>Kill session</td></tr>
-      <tr data-tip="Rename the current session — type a name and press Enter to confirm" data-example="Ctrl+o, r"><td>r</td><td>Rename session</td></tr>
+      <tr data-tip="Open the Zellij configuration UI — edit keybindings, theme, and options interactively" data-example="Ctrl+o, c"><td>c</td><td>Open configuration UI</td></tr>
+      <tr data-tip="Open the Zellij plugin manager — browse and manage installed plugins" data-example="Ctrl+o, p"><td>p</td><td>Open plugin manager</td></tr>
+      <tr data-tip="Open the Zellij layout manager — browse and switch between saved layouts" data-example="Ctrl+o, l"><td>l</td><td>Open layout manager</td></tr>
+      <tr data-tip="Open the Zellij share UI — share your session in a browser via the local web server" data-example="Ctrl+o, s"><td>s</td><td>Open share UI</td></tr>
+      <tr data-tip="Open the Zellij about screen — version info and credits" data-example="Ctrl+o, a"><td>a</td><td>About Zellij</td></tr>
     </table>
   </div>
 
