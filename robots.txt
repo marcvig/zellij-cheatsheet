@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zellijcheatsheet.com/sitemap.xml
+Sitemap: https://zellijcheatsheet.dev/sitemap.xml

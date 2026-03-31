@@ -6,7 +6,7 @@ A fast, searchable Zellij terminal multiplexer cheatsheet — modeled after [neo
 
 - Single-file static site (`index.html`)
 - Deployed via Cloudflare Pages — connected to GitHub, no build command, no `wrangler.jsonc`
-- Target domain: `zellijcheatsheet.com`
+- Target domain: `zellijcheatsheet.dev`
 
 > **Note:** Do NOT add a `wrangler.jsonc` to this repo. Cloudflare Pages detects it and misidentifies the project as a Cloudflare Workers deployment, causing builds to fail.
 
@@ -48,7 +48,7 @@ The "Also check out:" footer links are **dynamic** — fetched at runtime from a
 
 - **Registry repo:** `github.com/marcvig/cheatsheet-registry` (must stay public)
 - **CDN URL:** `https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json`
-- **This site's domain key:** `zellij-cheatsheet.pages.dev` (update if domain changes — see `CURRENT_DOMAIN` in `index.html`)
+- **This site's domain key:** `zellijcheatsheet.dev` (update if domain changes — see `CURRENT_DOMAIN` in `index.html`)
 
 ### How it works
 The footer `<script>` fetches `cheatsheets.json` via jsDelivr on every page load, filters out this site by `domain`, and renders the remaining sites as links. Fails silently if the registry is unreachable.
