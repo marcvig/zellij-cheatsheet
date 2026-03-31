@@ -28,7 +28,7 @@ A fast, searchable Zellij terminal multiplexer cheatsheet — modeled after [neo
 - `sitemap.xml` — single URL entry
 - `og-image.html` — source for regenerating the OG image
 - `og-image.png` — 1200×630 social preview card
-- `wrangler.jsonc` — Cloudflare Pages config
+- ~~`wrangler.jsonc`~~ — removed; causes Cloudflare Pages to misdetect as a Workers project
 
 ## Regenerating og-image.png
 
@@ -47,20 +47,21 @@ A fast, searchable Zellij terminal multiplexer cheatsheet — modeled after [neo
 The "Also check out:" footer links are **dynamic** — fetched at runtime from a centralized registry, not hardcoded.
 
 - **Registry repo:** `github.com/marcvig/cheatsheet-registry` (must stay public)
-- **CDN URL:** `https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json`
+- **Worker URL:** `https://cheatsheet-registry.marc-bfa.workers.dev/cheatsheets.json`
 - **This site's domain key:** `zellijcheatsheet.dev` (update if domain changes — see `CURRENT_DOMAIN` in `index.html`)
 
 ### How it works
-The footer `<script>` fetches `cheatsheets.json` via jsDelivr on every page load, filters out this site by `domain`, and renders the remaining sites as links. Fails silently if the registry is unreachable.
+The footer `<script>` fetches `cheatsheets.json` from a Cloudflare Worker on every page load, filters out this site by `domain`, and renders the remaining sites as links. The Worker imports `cheatsheets.json` at build time — no CDN cache issues. Fails silently if the worker is unreachable.
 
 ### To add/change a linked site
-Edit `cheatsheets.json` in `marcvig/cheatsheet-registry` and push. No redeployment of this site needed.
+1. Edit `cheatsheets.json` in `marcvig/cheatsheet-registry`
+2. Redeploy the Worker (`wrangler deploy` in the registry repo) — the new JSON is baked in at deploy time
+3. No redeployment of this site needed
 
 ### Debugging footer issues
-1. Open browser devtools → Network tab, reload, look for the jsDelivr request
-2. Check `https://cdn.jsdelivr.net/gh/marcvig/cheatsheet-registry@main/cheatsheets.json` directly in a browser — should return valid JSON
-3. jsDelivr caches by commit SHA — if a push isn't showing, wait ~5 min or append `?v=<timestamp>` to bust cache during testing
-4. If the registry URL needs to change, update it in the `REGISTRY` const in `index.html`
+1. Open browser devtools → Network tab, reload, look for the Workers request
+2. Check `https://cheatsheet-registry.marc-bfa.workers.dev/cheatsheets.json` directly in a browser — should return valid JSON instantly with no caching delay
+3. If the Worker URL needs to change, update it in the `REGISTRY` const in `index.html`
 
 ## Sections covered
 
