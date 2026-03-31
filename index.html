@@ -546,6 +546,44 @@
   .legend span[data-tip]  { cursor: pointer; }
 
   @media (max-width: 600px) { .tooltip { width: 92vw; } }
+
+  /* ── Disclaimer ──────────────────────────────────────────────────────── */
+  .disclaimer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #484f58;
+    margin-top: -12px;
+    margin-bottom: 18px;
+  }
+  .disclaimer span { color: #8b949e; }
+  body.light .disclaimer { color: #8c959f; }
+  body.light .disclaimer span { color: #57606a; }
+
+  /* ── Keyboard toggle ─────────────────────────────────────────────────── */
+  .keyboard-toggle-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 0.75rem;
+    color: #8b949e;
+  }
+  .kb-btn {
+    padding: 3px 12px;
+    border-radius: 20px;
+    border: 1px solid #30363d;
+    background: #21262d;
+    color: #8b949e;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .kb-btn:hover { border-color: #c084fc; color: #c9d1d9; }
+  .kb-btn.active { background: #c084fc22; border-color: #c084fc; color: #c084fc; font-weight: 700; }
+  body.light .kb-btn { background: #eaeef2; border-color: #d0d7de; color: #57606a; }
+  body.light .kb-btn:hover { border-color: #7c3aed; color: #24292f; }
+  body.light .kb-btn.active { background: #7c3aed18; border-color: #7c3aed; color: #7c3aed; }
 </style>
 </head>
 <body>
@@ -571,6 +609,7 @@
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">☀️</button>
 </div>
 <p class="subtitle">Complete Zellij command reference — searchable, fast, always free</p>
+<p class="disclaimer">⚠ <span>Keybindings shown are Zellij defaults and may differ based on your config</span></p>
 
 <!-- SEARCH -->
 <div class="search-wrap">
@@ -586,6 +625,13 @@
   </label>
   Click or hover any command for a description &amp; example
 </p>
+
+<!-- KEYBOARD TOGGLE -->
+<div class="keyboard-toggle-wrap">
+  <span>⌨️ Key labels:</span>
+  <button class="kb-btn active" id="kbPc">PC / Linux (Alt)</button>
+  <button class="kb-btn" id="kbMac">Mac (⌥ Option)</button>
+</div>
 
 <!-- LEGEND -->
 <div class="legend">
@@ -759,6 +805,7 @@
       <tr data-tip="Start Zellij using a named layout (built-in: default, compact, disable-status-bar)" data-example="zellij -l compact"><td>zellij -l &lt;layout&gt;</td><td>Start with a layout</td></tr>
       <tr data-tip="Start a new Zellij session with a specific name, or attach if it already exists" data-example="zellij -s mywork"><td>zellij -s &lt;name&gt;</td><td>Start / attach named session</td></tr>
       <tr data-tip="Attach to an existing named session that is running in the background" data-example="zellij attach mywork"><td>zellij attach &lt;name&gt;</td><td>Attach to session</td></tr>
+      <tr data-tip="Attach to a session if it exists, or create it if it doesn't — the -c flag means 'create if missing'" data-example="zellij attach -c mywork"><td>zellij attach -c &lt;name&gt;</td><td>Attach or create session</td></tr>
       <tr data-tip="List all running Zellij sessions with their names and status" data-example="zellij list-sessions"><td>zellij list-sessions</td><td>List sessions</td></tr>
       <tr data-tip="Shorthand alias for 'zellij list-sessions'" data-example="zellij ls"><td>zellij ls</td><td>List sessions (short)</td></tr>
       <tr data-tip="Terminate a named session and all its panes" data-example="zellij kill-session mywork" data-danger="Permanently terminates the session and all running processes in it"><td>zellij kill-session &lt;name&gt;</td><td>Kill a session</td></tr>
@@ -801,6 +848,29 @@
       <tr data-tip="Zellij stores scrollback and session state here — safe to delete if you want a clean slate" data-example="~/.cache/zellij/"><td>~/.cache/zellij/</td><td>Session cache directory</td></tr>
       <tr data-tip="Plugins are WebAssembly (.wasm) files — community plugins available on GitHub" data-example="~/.config/zellij/plugins/"><td>~/.config/zellij/plugins/</td><td>Plugin directory</td></tr>
       <tr data-tip="Strider is Zellij's built-in file explorer plugin — navigate and open files without leaving the terminal" data-example="zellij -l strider"><td>zellij -l strider</td><td>Built-in file explorer (Strider)</td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TMUX → ZELLIJ TRANSLATION
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header red" data-cmd="tmux → Zellij" data-tip="Coming from tmux? This card maps common tmux prefix commands to their Zellij equivalents. Zellij has no prefix key — modes are entered with Ctrl+ combos and most shortcuts are single keys within that mode.">tmux → Zellij Translation</div>
+    <table>
+      <tr data-tip="tmux splits horizontally with prefix+&quot;. In Zellij: enter Pane mode, then press d to split down." data-example="Ctrl+p, d"><td>prefix + &quot; → Ctrl+p, d</td><td>Split pane horizontal</td></tr>
+      <tr data-tip="tmux splits vertically with prefix+%. In Zellij: enter Pane mode, then press r to split right." data-example="Ctrl+p, r"><td>prefix + % → Ctrl+p, r</td><td>Split pane vertical</td></tr>
+      <tr data-tip="tmux creates a new window with prefix+c. In Zellij, tabs are the equivalent — Ctrl+t then n." data-example="Ctrl+t, n"><td>prefix + c → Ctrl+t, n</td><td>New window / tab</td></tr>
+      <tr data-tip="tmux navigates windows with prefix+n/p. In Zellij use Ctrl+t then l (next) or h (prev)." data-example="Ctrl+t, l"><td>prefix + n/p → Ctrl+t, l/h</td><td>Next / prev window</td></tr>
+      <tr data-tip="tmux detaches with prefix+d. In Zellij: enter Session mode with Ctrl+o, then press d." data-example="Ctrl+o, d"><td>prefix + d → Ctrl+o, d</td><td>Detach from session</td></tr>
+      <tr data-tip="tmux enters scroll/copy mode with prefix+[. In Zellij: Ctrl+s enters Scroll mode directly." data-example="Ctrl+s"><td>prefix + [ → Ctrl+s</td><td>Enter scroll mode</td></tr>
+      <tr data-tip="tmux zooms a pane with prefix+z. In Zellij: enter Pane mode with Ctrl+p, then press f for fullscreen." data-example="Ctrl+p, f"><td>prefix + z → Ctrl+p, f</td><td>Zoom / fullscreen pane</td></tr>
+      <tr data-tip="tmux kills a pane with prefix+x. In Zellij: enter Pane mode with Ctrl+p, then press x." data-example="Ctrl+p, x"><td>prefix + x → Ctrl+p, x</td><td>Kill pane</td></tr>
+      <tr data-tip="tmux navigates panes with prefix+arrow. In Zellij use Alt+h/j/k/l without entering any mode." data-example="Alt+h"><td>prefix + ↑↓←→ → Alt+h/j/k/l</td><td>Navigate panes</td></tr>
+      <tr data-tip="tmux renames a session with prefix+$. In Zellij: enter Session mode with Ctrl+o, then press r." data-example="Ctrl+o, r"><td>prefix + $ → Ctrl+o, r</td><td>Rename session</td></tr>
+      <tr data-tip="tmux CLI: new-session -s name. Zellij equivalent: zellij -s name" data-example="zellij -s mywork"><td>new-session -s → zellij -s</td><td>Create named session</td></tr>
+      <tr data-tip="tmux CLI: attach-session -t name. Zellij equivalent: zellij attach name" data-example="zellij attach mywork"><td>attach-session → zellij attach</td><td>Attach to session</td></tr>
+      <tr data-tip="tmux CLI: kill-session -t name. Zellij equivalent: zellij kill-session name" data-example="zellij kill-session mywork"><td>kill-session → zellij kill-session</td><td>Kill session</td></tr>
+      <tr data-tip="tmux CLI: list-sessions. Zellij equivalent: zellij list-sessions or zellij ls" data-example="zellij ls"><td>list-sessions → zellij ls</td><td>List sessions</td></tr>
     </table>
   </div>
 
@@ -1154,6 +1224,55 @@
     document.body.classList.toggle('light');
     localStorage.setItem('zellij-theme', document.body.classList.contains('light') ? 'light' : 'dark');
     updateIcon();
+  });
+</script>
+
+<script>
+  // ── Mac / PC keyboard toggle ──────────────────────────────────────────────
+  const kbPc  = document.getElementById('kbPc');
+  const kbMac = document.getElementById('kbMac');
+
+  function swapAlt(str, toMac) {
+    if (toMac) return str.replace(/Alt\+/g, 'Option+');
+    return str.replace(/Option\+/g, 'Alt+');
+  }
+
+  function applyKeyboard(mac) {
+    // 1. Update button states
+    kbPc.classList.toggle('active', !mac);
+    kbMac.classList.toggle('active', mac);
+
+    // 2. Update card header(s) containing "Alt+" / "Option+"
+    document.querySelectorAll('.card-header').forEach(h => {
+      h.textContent = swapAlt(h.textContent, mac);
+    });
+
+    // 3. Update originalCells htmls[0], texts[0], and live DOM td:first-child
+    originalCells.forEach(({ row, htmls, texts }) => {
+      htmls[0]  = swapAlt(htmls[0],  mac);
+      texts[0]  = swapAlt(texts[0],  mac);
+      const cmd = row.querySelector('td:first-child');
+      if (cmd) cmd.innerHTML = htmls[0];
+    });
+
+    // 4. Update data-example attributes (used by tooltips)
+    document.querySelectorAll('tr[data-example]').forEach(tr => {
+      tr.dataset.example = swapAlt(tr.dataset.example, mac);
+    });
+  }
+
+  // Load saved preference
+  const savedKb = localStorage.getItem('zellij-keyboard');
+  if (savedKb === 'mac') applyKeyboard(true);
+
+  kbPc.addEventListener('click', () => {
+    applyKeyboard(false);
+    localStorage.setItem('zellij-keyboard', 'pc');
+  });
+
+  kbMac.addEventListener('click', () => {
+    applyKeyboard(true);
+    localStorage.setItem('zellij-keyboard', 'mac');
   });
 </script>
 
