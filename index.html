@@ -558,6 +558,16 @@
   .disclaimer span { color: #8b949e; }
   body.light .disclaimer { color: #8c959f; }
   body.light .disclaimer span { color: #57606a; }
+  kbd.disclaimer-edit-icon {
+    font-family: inherit;
+    font-size: 0.85em;
+    background: #c084fc18;
+    border: 1px solid #c084fc55;
+    border-radius: 3px;
+    padding: 0 4px;
+    color: #c084fc;
+  }
+  body.light kbd.disclaimer-edit-icon { background: #7c3aed18; border-color: #7c3aed55; color: #7c3aed; }
 
   /* ── Keyboard toggle ─────────────────────────────────────────────────── */
   .keyboard-toggle-wrap {
@@ -592,7 +602,8 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-top: 28px;
+    margin-bottom: 0;
     font-size: 0.75rem;
     color: #8b949e;
   }
@@ -779,7 +790,7 @@
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">☀️</button>
 </div>
 <p class="subtitle">Complete Zellij command reference — searchable, fast, always free</p>
-<p class="disclaimer">⚠ <span>Keybindings shown are Zellij defaults and may differ based on your config</span></p>
+<p class="disclaimer">⚠ <span>Keybindings shown are Zellij defaults and may differ based on your config — click <kbd class="disclaimer-edit-icon">✎</kbd> to customize any binding</span></p>
 
 <!-- SEARCH -->
 <div class="search-wrap">
@@ -793,7 +804,7 @@
     <input type="checkbox" id="tooltipToggle" checked>
     <span class="toggle-track"><span class="toggle-thumb"></span></span>
   </label>
-  Click or hover any command for a description &amp; example
+  Click any command for a description &amp; example
 </p>
 
 <!-- KEYBOARD TOGGLE -->
@@ -801,15 +812,6 @@
   <span>⌨️ Key labels:</span>
   <button class="kb-btn active" id="kbPc">PC / Linux (Alt)</button>
   <button class="kb-btn" id="kbMac">Mac (⌥ Option)</button>
-</div>
-
-<!-- CUSTOMIZE BAR -->
-<div class="zj-customize-bar" id="zjCustomizeBar">
-  <span>✎ Custom bindings:</span>
-  <button id="zjExport">📤 Export JSON</button>
-  <button id="zjImport">📥 Import JSON</button>
-  <button id="zjResetAll" class="zj-cb-reset" style="display:none">↺ Reset all</button>
-  <input type="file" id="zjImportFile" accept=".json" style="display:none">
 </div>
 
 <!-- LEGEND -->
@@ -1059,6 +1061,15 @@
 
 </div>
 
+<!-- CUSTOMIZE BAR -->
+<div class="zj-customize-bar" id="zjCustomizeBar">
+  <span>✎ Custom bindings:</span>
+  <button id="zjExport">📤 Export JSON</button>
+  <button id="zjImport">📥 Import JSON</button>
+  <button id="zjResetAll" class="zj-cb-reset" style="display:none">↺ Reset all</button>
+  <input type="file" id="zjImportFile" accept=".json" style="display:none">
+</div>
+
 <footer>
   Zellij Cheatsheet · Complete terminal multiplexer reference · Updated March 2026 · <a href="https://zellij.dev" target="_blank" rel="noopener" style="color:#484f58;">zellij.dev</a>
   <br>
@@ -1211,16 +1222,28 @@
       tooltipDanger.style.display = 'none';
     }
 
-    // Command label
-    tooltipCmd.textContent = el.querySelector('td:first-child')?.textContent
-      || el.dataset.cmd
-      || '';
+    // Command label — use custom binding if set, otherwise strip ✎ edit button text
+    const currentBinding = el.dataset && el.dataset.currentBinding;
+    let cmdText;
+    if (currentBinding) {
+      cmdText = currentBinding;
+    } else {
+      const cmdCell = el.querySelector('td:first-child');
+      if (cmdCell) {
+        const clone = cmdCell.cloneNode(true);
+        clone.querySelector('.zj-edit-btn')?.remove();
+        cmdText = clone.textContent.trim();
+      } else {
+        cmdText = el.dataset.cmd || '';
+      }
+    }
+    tooltipCmd.textContent = cmdText;
 
     // Description
     tooltipDesc.textContent = el.dataset.tip || '';
 
-    // Example
-    const ex = el.dataset.example || '';
+    // Example — use custom binding if set, otherwise fall back to data-example
+    const ex = currentBinding || el.dataset.example || '';
     if (ex) {
       tooltipCode.textContent = ex;
       tooltipExampleSection.style.display = 'block';
@@ -1261,16 +1284,6 @@
       clearTimeout(showTimer);
       openTooltip(row);
     });
-    row.addEventListener('mouseenter', () => {
-      cancelClose();
-      clearTimeout(showTimer);
-      if (!tipsEnabled()) return;
-      showTimer = setTimeout(() => openTooltip(row), 2000);
-    });
-    row.addEventListener('mouseleave', e => {
-      clearTimeout(showTimer);
-      if (tipVisible && !tooltip.contains(e.relatedTarget)) scheduleClose();
-    });
   });
 
   // ── Card headers + legend badges ──────────────────────────────────────
@@ -1302,7 +1315,7 @@
   tooltip.addEventListener('mouseenter', cancelClose);
   tooltip.addEventListener('mouseleave', e => {
     const over = e.relatedTarget;
-    if (!over || (!over.closest('tr[data-tip]') && !over.closest('.card-header[data-tip]') && !over.closest('.legend span[data-tip]'))) scheduleClose();
+    if (!over || (!over.closest('.card-header[data-tip]') && !over.closest('.legend span[data-tip]'))) scheduleClose();
   });
 
   tooltipClose.addEventListener('click', closeTooltip);
