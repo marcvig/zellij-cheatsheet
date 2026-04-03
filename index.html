@@ -1403,8 +1403,7 @@
 
   // Apply saved preference on load
   const savedTheme = localStorage.getItem('zellij-theme');
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+  if (savedTheme === 'light') {
     document.body.classList.add('light');
   }
   document.documentElement.classList.remove('preload-light');
