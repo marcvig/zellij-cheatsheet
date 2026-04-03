@@ -431,38 +431,9 @@
   body.light .back-to-top:hover        { background: #7c3aed22; border-color: #7c3aed; }
   body.light .back-to-top svg          { stroke: #7c3aed; }
 
-  /* ── Tooltip toggle switch ───────────────────────────────────────────── */
-  .tooltip-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 0.72rem;
-    color: #8b949e;
-    margin-top: -10px;
-    margin-bottom: 18px;
-  }
-  .toggle-switch { display: inline-flex; align-items: center; cursor: pointer; flex-shrink: 0; }
-  .toggle-switch input { display: none; }
-  .toggle-track {
-    width: 34px; height: 19px;
-    background: #30363d;
-    border-radius: 10px;
-    position: relative;
-    transition: background 0.2s;
-  }
-  .toggle-switch input:checked + .toggle-track { background: #c084fc; }
-  .toggle-thumb {
-    position: absolute; top: 2.5px; left: 2.5px;
-    width: 14px; height: 14px;
-    background: #fff; border-radius: 50%;
-    transition: transform 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  }
-  .toggle-switch input:checked + .toggle-track .toggle-thumb { transform: translateX(15px); }
-  body.light .tooltip-hint { color: #57606a; }
-  body.light .toggle-track { background: #d0d7de; }
-  body.light .toggle-switch input:checked + .toggle-track { background: #7c3aed; }
+  /* ── Row hover highlight (click-to-tip cue) ─────────────────────────────── */
+  tr[data-tip]:hover td { background: rgba(192, 132, 252, 0.06); transition: background 0.1s; }
+  body.light tr[data-tip]:hover td { background: rgba(124, 58, 237, 0.06); }
 
   /* ── Tooltip popup ───────────────────────────────────────────────────── */
   .tooltip {
@@ -799,13 +770,6 @@
   <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
 </div>
 <div class="search-count" id="count"></div>
-<p class="tooltip-hint">
-  <label class="toggle-switch" title="Enable / disable command tooltips">
-    <input type="checkbox" id="tooltipToggle" checked>
-    <span class="toggle-track"><span class="toggle-thumb"></span></span>
-  </label>
-  Click any command for a description &amp; example
-</p>
 
 <!-- KEYBOARD TOGGLE -->
 <div class="keyboard-toggle-wrap">
@@ -1199,13 +1163,6 @@
   const tooltipCopy   = document.getElementById('tooltipCopy');
   const tooltipClose  = document.getElementById('tooltipClose');
   const tooltipDanger = document.getElementById('tooltipDanger');
-  const tooltipToggle = document.getElementById('tooltipToggle');
-  const tipsEnabled   = () => tooltipToggle.checked;
-
-  tooltipToggle.addEventListener('change', () => {
-    if (!tooltipToggle.checked) closeTooltip();
-  });
-
   let showTimer = null;
   let hideTimer = null;
   let tipVisible = false;
@@ -1213,6 +1170,26 @@
   const tooltipExampleSection = document.getElementById('tooltipExampleSection');
 
   function openTooltip(el) {
+    // Accent color — matches the card header text color of the clicked row
+    const cardHeader = el.closest?.('.card')?.querySelector('.card-header');
+    const isLight = document.body.classList.contains('light');
+    const colorMap = {
+      green:  isLight ? '#116329' : '#7ee787',
+      orange: isLight ? '#bc4c00' : '#f0883e',
+      purple: isLight ? '#8250df' : '#d2a8ff',
+      red:    isLight ? '#cf222e' : '#f85149',
+      yellow: isLight ? '#9a6700' : '#e3b341',
+      teal:   isLight ? '#116329' : '#39d353',
+    };
+    let tipColor = isLight ? '#7c3aed' : '#c084fc';
+    if (cardHeader) {
+      for (const [cls, col] of Object.entries(colorMap)) {
+        if (cardHeader.classList.contains(cls)) { tipColor = col; break; }
+      }
+    }
+    tooltip.style.borderColor = tipColor;
+    tooltipCmd.style.color    = tipColor;
+
     // Danger banner
     const danger = el.dataset.danger || '';
     if (danger) {
@@ -1259,10 +1236,18 @@
       const rect = el.getBoundingClientRect();
       const tw = tooltip.offsetWidth;
       const th = tooltip.offsetHeight;
-      let x = rect.right + 12;
-      let y = rect.top;
-      if (x + tw > window.innerWidth - 12) x = rect.left - tw - 12;
-      if (y + th > window.innerHeight - 12) y = window.innerHeight - th - 12;
+      let x, y;
+      if (window.innerWidth <= 600) {
+        // Mobile: always place below the clicked row so it never covers the command
+        x = 8;
+        y = rect.bottom + 10;
+        if (y + th > window.innerHeight - 12) y = window.innerHeight - th - 12;
+      } else {
+        x = rect.right + 12;
+        y = rect.top;
+        if (x + tw > window.innerWidth - 12) x = rect.left - tw - 12;
+        if (y + th > window.innerHeight - 12) y = window.innerHeight - th - 12;
+      }
       tooltip.style.left = Math.max(8, x) + 'px';
       tooltip.style.top  = Math.max(8, y) + 'px';
     });
@@ -1278,7 +1263,7 @@
 
   document.querySelectorAll('tr[data-tip]').forEach(row => {
     row.addEventListener('click', e => {
-      if (!tipsEnabled() || tooltip.contains(e.target)) return;
+      if (tooltip.contains(e.target)) return;
       e.stopPropagation();
       cancelClose();
       clearTimeout(showTimer);
@@ -1294,7 +1279,7 @@
 
   tipTargets.forEach(el => {
     el.addEventListener('click', e => {
-      if (!tipsEnabled() || tooltip.contains(e.target)) return;
+      if (tooltip.contains(e.target)) return;
       e.stopPropagation();
       cancelClose();
       clearTimeout(showTimer);
@@ -1303,7 +1288,6 @@
     el.addEventListener('mouseenter', () => {
       cancelClose();
       clearTimeout(showTimer);
-      if (!tipsEnabled()) return;
       showTimer = setTimeout(() => openTooltip(el), 400);
     });
     el.addEventListener('mouseleave', e => {
