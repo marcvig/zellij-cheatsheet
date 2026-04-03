@@ -431,7 +431,10 @@
   body.light .back-to-top:hover        { background: #7c3aed22; border-color: #7c3aed; }
   body.light .back-to-top svg          { stroke: #7c3aed; }
 
-  /* ── Row hover highlight (click-to-tip cue) ─────────────────────────────── */
+  /* ── Row hover highlight + touch fix ────────────────────────────────────── */
+  /* touch-action: manipulation fires click on first tap on iOS (no double-tap needed) */
+  tr[data-tip]    { touch-action: manipulation; }
+  tr[data-tip] td { touch-action: manipulation; cursor: pointer; }
   tr[data-tip]:hover td { background: rgba(192, 132, 252, 0.06); transition: background 0.1s; }
   body.light tr[data-tip]:hover td { background: rgba(124, 58, 237, 0.06); }
 
@@ -1163,9 +1166,10 @@
   const tooltipCopy   = document.getElementById('tooltipCopy');
   const tooltipClose  = document.getElementById('tooltipClose');
   const tooltipDanger = document.getElementById('tooltipDanger');
-  let showTimer = null;
-  let hideTimer = null;
-  let tipVisible = false;
+  let showTimer     = null;
+  let hideTimer     = null;
+  let autoCloseTimer = null;
+  let tipVisible    = false;
 
   const tooltipExampleSection = document.getElementById('tooltipExampleSection');
 
@@ -1232,6 +1236,10 @@
     tooltip.classList.add('visible');
     tipVisible = true;
 
+    // Auto-close after 6 s — resets on every new open
+    clearTimeout(autoCloseTimer);
+    autoCloseTimer = setTimeout(closeTooltip, 6000);
+
     requestAnimationFrame(() => {
       const rect = el.getBoundingClientRect();
       const tw = tooltip.offsetWidth;
@@ -1254,6 +1262,7 @@
   }
 
   function closeTooltip() {
+    clearTimeout(autoCloseTimer);
     tooltip.classList.remove('visible');
     tipVisible = false;
   }
