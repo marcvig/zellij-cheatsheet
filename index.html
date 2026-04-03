@@ -584,6 +584,176 @@
   body.light .kb-btn { background: #eaeef2; border-color: #d0d7de; color: #57606a; }
   body.light .kb-btn:hover { border-color: #7c3aed; color: #24292f; }
   body.light .kb-btn.active { background: #7c3aed18; border-color: #7c3aed; color: #7c3aed; }
+
+  /* ── Custom Bindings ─────────────────────────────────────────────────────── */
+  .zj-customize-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+    font-size: 0.75rem;
+    color: #8b949e;
+  }
+  .zj-customize-bar button {
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #21262d;
+    color: #c9d1d9;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .zj-customize-bar button:hover { border-color: #c084fc; color: #c084fc; background: #c084fc12; }
+  .zj-customize-bar .zj-cb-reset { color: #f85149; border-color: #f8514955; }
+  .zj-customize-bar .zj-cb-reset:hover { background: #f8514912; border-color: #f85149; color: #f85149; }
+
+  /* Edit button (✎) on rows */
+  .zj-edit-btn {
+    opacity: 0;
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: opacity 0.15s, color 0.15s, background 0.15s;
+    line-height: 1;
+  }
+  tr[data-tip]:hover .zj-edit-btn { opacity: 1; }
+  .zj-edit-btn:hover { color: #c084fc; background: #c084fc18; }
+
+  /* Inline edit form */
+  .zj-bind-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .zj-bind-input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: #1c2128;
+    border: 1px solid #8b5cf655;
+    border-radius: 5px;
+    color: #e2e8f0;
+    padding: 2px 8px;
+    width: 130px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .zj-bind-input:focus { border-color: #c084fc; box-shadow: 0 0 0 2px #c084fc22; }
+  .zj-bind-save, .zj-bind-cancel, .zj-bind-reset {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid;
+    background: none;
+    transition: background 0.15s;
+  }
+  .zj-bind-save   { color: #c084fc; border-color: #c084fc55; }
+  .zj-bind-save:hover   { background: #c084fc18; }
+  .zj-bind-cancel { color: #8b949e; border-color: #30363d; }
+  .zj-bind-cancel:hover { background: #21262d; }
+  .zj-bind-reset  { color: #f85149; border-color: #f8514955; font-size: 0.68rem; }
+  .zj-bind-reset:hover  { background: #f8514912; }
+
+  /* Custom key display */
+  kbd.zj-custom-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: #c084fc18;
+    border: 1px solid #c084fc55;
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: #c084fc;
+    font-weight: 600;
+  }
+
+  /* Has-custom dot indicator */
+  tr.has-custom td:first-child {
+    position: relative;
+    padding-left: 22px;
+  }
+  tr.has-custom td:first-child::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #c084fc;
+  }
+
+  /* Confirm overlay */
+  .zj-confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .zj-confirm-overlay.open { display: flex; }
+  .zj-confirm-dialog {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 28px 32px 22px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .zj-confirm-dialog h3 { color: #e2e8f0; margin-bottom: 10px; font-size: 1rem; }
+  .zj-confirm-dialog p  { color: #8b949e; font-size: 0.85rem; line-height: 1.5; margin-bottom: 20px; }
+  .zj-confirm-dialog-btns { display: flex; justify-content: flex-end; gap: 8px; }
+  .zj-confirm-cancel {
+    padding: 6px 16px; border-radius: 6px; border: 1px solid #30363d;
+    background: none; color: #8b949e; font-size: 0.85rem; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .zj-confirm-cancel:hover { background: #21262d; }
+  .zj-confirm-ok {
+    padding: 6px 16px; border-radius: 6px; border: 1px solid #f8514955;
+    background: none; color: #f85149; font-size: 0.85rem; cursor: pointer; font-weight: 600;
+    transition: background 0.15s;
+  }
+  .zj-confirm-ok:hover { background: #f8514912; }
+
+  /* Light mode overrides */
+  body.light .zj-customize-bar { color: #57606a; }
+  body.light .zj-customize-bar button { background: #eaeef2; border-color: #d0d7de; color: #24292f; }
+  body.light .zj-customize-bar button:hover { border-color: #7c3aed; color: #7c3aed; background: #7c3aed12; }
+  body.light .zj-customize-bar .zj-cb-reset { color: #cf222e; border-color: #cf222e55; }
+  body.light .zj-customize-bar .zj-cb-reset:hover { background: #cf222e12; border-color: #cf222e; }
+  body.light .zj-edit-btn { color: #8c959f; }
+  body.light .zj-edit-btn:hover { color: #7c3aed; background: #7c3aed18; }
+  body.light .zj-bind-input { background: #f6f8fa; border-color: #7c3aed55; color: #24292f; }
+  body.light .zj-bind-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 2px #7c3aed22; }
+  body.light .zj-bind-save   { color: #7c3aed; border-color: #7c3aed55; }
+  body.light .zj-bind-save:hover   { background: #7c3aed18; }
+  body.light .zj-bind-cancel { color: #57606a; border-color: #d0d7de; }
+  body.light .zj-bind-cancel:hover { background: #eaeef2; }
+  body.light .zj-bind-reset  { color: #cf222e; border-color: #cf222e55; }
+  body.light .zj-bind-reset:hover  { background: #cf222e12; }
+  body.light kbd.zj-custom-key { background: #7c3aed18; border-color: #7c3aed55; color: #7c3aed; }
+  body.light tr.has-custom td:first-child::before { background: #7c3aed; }
+  body.light .zj-confirm-dialog { background: #f6f8fa; border-color: #d0d7de; }
+  body.light .zj-confirm-dialog h3 { color: #24292f; }
+  body.light .zj-confirm-dialog p  { color: #57606a; }
+  body.light .zj-confirm-cancel { border-color: #d0d7de; color: #57606a; }
+  body.light .zj-confirm-cancel:hover { background: #eaeef2; }
+  body.light .zj-confirm-ok { border-color: #cf222e55; color: #cf222e; }
+  body.light .zj-confirm-ok:hover { background: #cf222e12; }
 </style>
 </head>
 <body>
@@ -631,6 +801,15 @@
   <span>⌨️ Key labels:</span>
   <button class="kb-btn active" id="kbPc">PC / Linux (Alt)</button>
   <button class="kb-btn" id="kbMac">Mac (⌥ Option)</button>
+</div>
+
+<!-- CUSTOMIZE BAR -->
+<div class="zj-customize-bar" id="zjCustomizeBar">
+  <span>✎ Custom bindings:</span>
+  <button id="zjExport">📤 Export JSON</button>
+  <button id="zjImport">📥 Import JSON</button>
+  <button id="zjResetAll" class="zj-cb-reset" style="display:none">↺ Reset all</button>
+  <input type="file" id="zjImportFile" accept=".json" style="display:none">
 </div>
 
 <!-- LEGEND -->
@@ -966,6 +1145,7 @@
     if (!query) {
       countEl.textContent = '';
       countEl.className = 'search-count';
+      window.onSearchUpdate && window.onSearchUpdate();
       return;
     }
 
@@ -995,6 +1175,7 @@
       countEl.textContent = `${totalVisible} result${totalVisible !== 1 ? 's' : ''} found`;
       countEl.className = 'search-count';
     }
+    window.onSearchUpdate && window.onSearchUpdate();
   });
 </script>
 
@@ -1192,6 +1373,18 @@
   });
 </script>
 
+<!-- CONFIRM OVERLAY -->
+<div class="zj-confirm-overlay" id="zjConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="zjConfirmTitle">
+  <div class="zj-confirm-dialog">
+    <h3 id="zjConfirmTitle"></h3>
+    <p id="zjConfirmMsg"></p>
+    <div class="zj-confirm-dialog-btns">
+      <button class="zj-confirm-cancel" id="zjConfirmCancel">Cancel</button>
+      <button class="zj-confirm-ok" id="zjConfirmOk">Reset all</button>
+    </div>
+  </div>
+</div>
+
 <button class="back-to-top" id="backToTop" aria-label="Back to top">
   <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
@@ -1263,6 +1456,9 @@
     document.querySelectorAll('tr[data-example]').forEach(tr => {
       tr.dataset.example = swapAlt(tr.dataset.example, mac);
     });
+
+    // 5. Re-apply custom bindings that were wiped by the DOM update above
+    window.onSearchUpdate && window.onSearchUpdate();
   }
 
   // Load saved preference
@@ -1278,6 +1474,312 @@
     applyKeyboard(true);
     localStorage.setItem('zellij-keyboard', 'mac');
   });
+</script>
+
+
+<script>
+// ── Custom Keybindings ────────────────────────────────────────────────────────
+(function () {
+  const STORAGE_KEY = 'zellij-custom-bindings';
+
+  function loadBindings() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function saveBindings(b) { localStorage.setItem(STORAGE_KEY, JSON.stringify(b)); }
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  let bindings = loadBindings();
+
+  // ── Confirm overlay ──────────────────────────────────────────────────────
+  const confirmOverlay = document.getElementById('zjConfirmOverlay');
+  const confirmCancel  = document.getElementById('zjConfirmCancel');
+  const confirmOk      = document.getElementById('zjConfirmOk');
+  let confirmCb = null;
+
+  function showConfirm(title, msg, okLabel, cb) {
+    document.getElementById('zjConfirmTitle').textContent = title;
+    document.getElementById('zjConfirmMsg').textContent   = msg;
+    confirmOk.textContent = okLabel;
+    confirmCb = cb;
+    confirmOverlay.classList.add('open');
+    confirmCancel.focus();
+  }
+  function closeConfirm() { confirmOverlay.classList.remove('open'); confirmCb = null; }
+
+  confirmCancel.addEventListener('click', closeConfirm);
+  confirmOk.addEventListener('click', () => { const cb = confirmCb; closeConfirm(); cb && cb(); });
+  confirmOverlay.addEventListener('click', e => { if (e.target === confirmOverlay) closeConfirm(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && confirmOverlay.classList.contains('open')) closeConfirm();
+  });
+
+  // ── Row metadata ─────────────────────────────────────────────────────────
+  // rowMeta: row → { key, originalHtml, originalText, cardTitle, descText }
+  const rowMeta = new Map();
+
+  const EDIT_BTN_HTML = '<button class="zj-edit-btn" title="Edit this binding">✎</button>';
+
+  function getCardTitle(row) {
+    const h = row.closest('.card')?.querySelector('.card-header');
+    return (h?.dataset.cmd || h?.textContent || 'Unknown').trim();
+  }
+
+  function injectEditBtn(row) {
+    const td = row.querySelector('td:first-child');
+    if (!td || td.querySelector('.zj-edit-btn')) return;
+    td.insertAdjacentHTML('beforeend', EDIT_BTN_HTML);
+  }
+
+  function applyBinding(row, customVal) {
+    const meta = rowMeta.get(row);
+    if (!meta) return;
+    const td = row.querySelector('td:first-child');
+    if (!td) return;
+    td.innerHTML = `<kbd class="zj-custom-key">${escHtml(customVal)}</kbd>`;
+    injectEditBtn(row);
+    row.classList.add('has-custom');
+    row.dataset.currentBinding = customVal;
+    bindings[meta.key] = customVal;
+  }
+
+  function resetBinding(row) {
+    const meta = rowMeta.get(row);
+    if (!meta) return;
+    const td = row.querySelector('td:first-child');
+    if (!td) return;
+    td.innerHTML = meta.originalHtml;
+    injectEditBtn(row);
+    row.classList.remove('has-custom');
+    delete row.dataset.currentBinding;
+    delete bindings[meta.key];
+  }
+
+  function startEdit(row) {
+    const meta = rowMeta.get(row);
+    if (!meta) return;
+    const td = row.querySelector('td:first-child');
+    if (!td || td.classList.contains('zj-editing')) return;
+    td.classList.add('zj-editing');
+
+    const isCustom = !!row.dataset.currentBinding;
+    const curVal   = row.dataset.currentBinding || meta.originalText;
+
+    const wrap      = document.createElement('div');
+    wrap.className  = 'zj-bind-form';
+
+    const input       = document.createElement('input');
+    input.type        = 'text';
+    input.className   = 'zj-bind-input';
+    input.value       = curVal;
+    input.placeholder = meta.originalText;
+
+    const saveBtn     = document.createElement('button');
+    saveBtn.className = 'zj-bind-save';
+    saveBtn.textContent = '✓';
+    saveBtn.title = 'Save (Enter)';
+
+    const cancelBtn     = document.createElement('button');
+    cancelBtn.className = 'zj-bind-cancel';
+    cancelBtn.textContent = '✕';
+    cancelBtn.title = 'Cancel (Esc)';
+
+    wrap.append(input, saveBtn, cancelBtn);
+
+    if (isCustom) {
+      const resetBtn      = document.createElement('button');
+      resetBtn.className  = 'zj-bind-reset';
+      resetBtn.textContent = '↩ Default';
+      resetBtn.title = 'Restore default';
+      wrap.appendChild(resetBtn);
+      resetBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        td.classList.remove('zj-editing');
+        resetBinding(row);
+        saveBindings(bindings);
+        updateResetAllBtn();
+      });
+    }
+
+    td.innerHTML = '';
+    td.appendChild(wrap);
+    input.focus();
+    input.select();
+
+    // Prevent clicks inside the form from bubbling to row's tooltip handler
+    wrap.addEventListener('click', e => e.stopPropagation());
+
+    function doSave() {
+      const val = input.value.trim();
+      td.classList.remove('zj-editing');
+      if (!val || val === meta.originalText) {
+        resetBinding(row);
+      } else {
+        applyBinding(row, val);
+      }
+      saveBindings(bindings);
+      updateResetAllBtn();
+    }
+
+    function doCancel() {
+      td.classList.remove('zj-editing');
+      if (row.dataset.currentBinding) {
+        applyBinding(row, row.dataset.currentBinding);
+      } else {
+        td.innerHTML = meta.originalHtml;
+        injectEditBtn(row);
+      }
+    }
+
+    saveBtn.addEventListener('click',   e => { e.stopPropagation(); doSave(); });
+    cancelBtn.addEventListener('click', e => { e.stopPropagation(); doCancel(); });
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter')  { e.preventDefault(); e.stopPropagation(); doSave(); }
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); doCancel(); }
+      else { e.stopPropagation(); } // prevent / from focusing search while typing
+    });
+  }
+
+  // Capture-phase: intercept edit button clicks before tooltip + copy handlers
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.zj-edit-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    const row = btn.closest('tr[data-tip]');
+    if (row) startEdit(row);
+  }, true);
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  function updateResetAllBtn() {
+    const btn = document.getElementById('zjResetAll');
+    if (!btn) return;
+    btn.style.display = Object.keys(bindings).length > 0 ? '' : 'none';
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  function init() {
+    document.querySelectorAll('tr[data-tip]').forEach(row => {
+      const td = row.querySelector('td:first-child');
+      if (!td) return;
+
+      const cardTitle   = getCardTitle(row);
+      const descText    = row.querySelector('td:last-child')?.textContent.trim() || '';
+      const key         = `${cardTitle}::${descText}`;
+      // originalText: strip the ⚠ danger badge if present, use .cmd-text child if available
+      const originalText = (td.querySelector('.cmd-text') || td).textContent.trim();
+      const originalHtml = td.innerHTML; // post-processed HTML (placeholder spans + danger badges)
+
+      rowMeta.set(row, { key, originalHtml, originalText, cardTitle, descText });
+
+      if (bindings[key]) {
+        applyBinding(row, bindings[key]);
+      } else {
+        injectEditBtn(row);
+      }
+    });
+
+    updateResetAllBtn();
+  }
+
+  // ── Search / keyboard-toggle hook ─────────────────────────────────────────
+  // Called after search restores the DOM or Mac/PC toggle rewrites Alt text.
+  // Re-applies custom binding displays and edit buttons for all rows.
+  window.onSearchUpdate = function () {
+    rowMeta.forEach((meta, row) => {
+      const td = row.querySelector('td:first-child');
+      if (!td || td.classList.contains('zj-editing')) return;
+      if (row.dataset.currentBinding) {
+        applyBinding(row, row.dataset.currentBinding);
+      } else {
+        if (!td.querySelector('.zj-edit-btn')) injectEditBtn(row);
+      }
+    });
+  };
+
+  // ── Export ────────────────────────────────────────────────────────────────
+  document.getElementById('zjExport')?.addEventListener('click', () => {
+    if (Object.keys(bindings).length === 0) {
+      alert('No custom bindings yet.\n\nHover any command row and click ✎ to create one.');
+      return;
+    }
+    const blob = new Blob([JSON.stringify(bindings, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'zellij-custom-bindings.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById('zjImport')?.addEventListener('click', () => {
+    document.getElementById('zjImportFile').click();
+  });
+
+  document.getElementById('zjImportFile')?.addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (typeof imported !== 'object' || Array.isArray(imported)) throw new Error('bad format');
+
+        // Reset all current custom bindings in the DOM
+        rowMeta.forEach((meta, row) => {
+          if (!row.dataset.currentBinding) return;
+          const td = row.querySelector('td:first-child');
+          if (td) { td.innerHTML = meta.originalHtml; injectEditBtn(row); }
+          row.classList.remove('has-custom');
+          delete row.dataset.currentBinding;
+        });
+
+        // Apply imported bindings
+        bindings = {};
+        let count = 0;
+        rowMeta.forEach((meta, row) => {
+          const val = imported[meta.key];
+          if (val && typeof val === 'string') {
+            applyBinding(row, val);
+            count++;
+          }
+        });
+
+        saveBindings(bindings);
+        updateResetAllBtn();
+        if (count > 0) alert(`Imported ${count} custom binding${count !== 1 ? 's' : ''}.`);
+        else alert('No matching bindings found in the imported file.');
+      } catch { alert('Invalid JSON file.'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  // ── Reset all ─────────────────────────────────────────────────────────────
+  document.getElementById('zjResetAll')?.addEventListener('click', () => {
+    showConfirm(
+      'Reset all custom bindings?',
+      'This will restore all commands to their Zellij defaults. This cannot be undone.',
+      '↺ Reset all',
+      () => {
+        rowMeta.forEach((meta, row) => {
+          const td = row.querySelector('td:first-child');
+          if (!td) return;
+          td.innerHTML = meta.originalHtml;
+          td.classList.remove('zj-editing');
+          row.classList.remove('has-custom');
+          delete row.dataset.currentBinding;
+          injectEditBtn(row);
+        });
+        bindings = {};
+        saveBindings(bindings);
+        updateResetAllBtn();
+      }
+    );
+  });
+
+  init();
+})();
 </script>
 
 </body>
