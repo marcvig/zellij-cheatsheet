@@ -1170,6 +1170,7 @@
   let hideTimer     = null;
   let autoCloseTimer = null;
   let tipVisible    = false;
+  let activeRow     = null;
 
   const tooltipExampleSection = document.getElementById('tooltipExampleSection');
 
@@ -1235,6 +1236,7 @@
     tooltipCopy.classList.remove('copied');
     tooltip.classList.add('visible');
     tipVisible = true;
+    activeRow = el;
 
     // Auto-close after 6 s — resets on every new open
     clearTimeout(autoCloseTimer);
@@ -1265,6 +1267,7 @@
     clearTimeout(autoCloseTimer);
     tooltip.classList.remove('visible');
     tipVisible = false;
+    activeRow = null;
   }
 
   function scheduleClose() { hideTimer = setTimeout(closeTooltip, 120); }
@@ -1277,6 +1280,7 @@
       e.stopPropagation();
       cancelClose();
       clearTimeout(showTimer);
+      if (tipVisible && activeRow === row) { closeTooltip(); return; }
       openTooltip(row);
     });
     // iOS/tablet: touchend fires before the synthetic click, so handle it
@@ -1290,6 +1294,7 @@
       e.preventDefault();
       cancelClose();
       clearTimeout(showTimer);
+      if (tipVisible && activeRow === row) { closeTooltip(); return; }
       openTooltip(row);
     }, { passive: false });
   });
