@@ -1328,7 +1328,7 @@
       const el = document.elementFromPoint(t.clientX, t.clientY);
       if (!el || !el.closest('tr[data-tip]')) return;
       // Let the edit button and edit UI buttons' synthetic clicks through
-      if (el.closest('.edit-bind-btn') || el.closest('.binding-wrap')) return;
+      if (el.closest('.zj-edit-btn') || el.closest('.zj-bind-form')) return;
       e.preventDefault();
       cancelClose();
       clearTimeout(showTimer);
