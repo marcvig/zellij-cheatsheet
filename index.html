@@ -141,7 +141,24 @@
     border-color: #c084fc;
     box-shadow: 0 0 0 3px #8b5cf633;
   }
+  .search-wrap input { padding-right: 80px; }
   .search-wrap input::placeholder { color: #484f58; }
+  .search-slash {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: #484f58;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 1px 6px;
+    pointer-events: none;
+    transition: opacity 0.15s;
+  }
+  .search-slash.hidden { opacity: 0; }
+  body.light .search-slash { color: #8c959f; background: #eaeef2; border-color: #d0d7de; }
   .search-clear {
     position: absolute;
     right: 12px;
@@ -770,6 +787,7 @@
 <div class="search-wrap">
   <span class="search-icon">🔍</span>
   <input type="text" id="search" placeholder="Type to filter commands…" autocomplete="off" spellcheck="false">
+  <span class="search-slash" id="searchSlash">/ to search</span>
   <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
 </div>
 <div class="search-count" id="count"></div>
@@ -1064,6 +1082,7 @@
 <script>
   const searchInput  = document.getElementById('search');
   const searchClear  = document.getElementById('searchClear');
+  const searchSlash  = document.getElementById('searchSlash');
   const countEl      = document.getElementById('count');
   const cards        = document.querySelectorAll('.card');
 
@@ -1109,8 +1128,13 @@
     searchInput.focus();
   });
 
+  searchInput.addEventListener('focus', () => searchSlash.classList.add('hidden'));
+  searchInput.addEventListener('blur',  () => { if (!searchInput.value) searchSlash.classList.remove('hidden'); });
+
   searchInput.addEventListener('input', () => {
-    searchClear.classList.toggle('visible', searchInput.value.length > 0);
+    const hasValue = searchInput.value.length > 0;
+    searchClear.classList.toggle('visible', hasValue);
+    searchSlash.classList.toggle('hidden', hasValue);
     const query = searchInput.value.trim().toLowerCase();
 
     // Reset
@@ -1338,6 +1362,26 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && tipVisible) closeTooltip();
+  });
+
+  // Press / to focus search (skip if already in an input/textarea)
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/') return;
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  });
+
+  // Press / to focus search (skip if already in an input/textarea)
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/') return;
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
   });
 
   tooltipCopy.addEventListener('click', () => {
