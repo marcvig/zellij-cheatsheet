@@ -95,7 +95,8 @@
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap"></noscript>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -1067,7 +1068,7 @@
   const REGISTRY = 'https://cheatsheet-registry.marc-bfa.workers.dev/cheatsheets.json';
   const CURRENT_DOMAIN = 'zellijcheatsheet.dev';
 
-  fetch(REGISTRY, { cache: 'no-cache' })
+  fetch(REGISTRY)
     .then(r => r.json())
     .then(sites => {
       const others = sites.filter(s => s.domain !== CURRENT_DOMAIN);
@@ -1417,8 +1418,9 @@
   });
 </script>
 
-<script src="/confetti.browser.min.js"></script>
+<script src="/confetti.browser.min.js" defer></script>
 <script>
+  window.addEventListener('load', function() {
   const crabBtn = document.getElementById('crabBtn');
   let crabBusy = false;
 
@@ -1461,6 +1463,7 @@
       }, 450);
     }, 750);
   });
+  }); // end load
 </script>
 
 <!-- CONFIRM OVERLAY -->
