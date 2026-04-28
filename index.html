@@ -86,7 +86,7 @@
   },
   "keywords": "zellij, cheatsheet, terminal multiplexer, keybindings, panes, tabs, sessions, reference",
   "datePublished": "2026-03-29",
-  "dateModified": "2026-03-29"
+  "dateModified": "2026-04-28"
 }
 </script>
 
@@ -142,7 +142,6 @@
     border-color: #c084fc;
     box-shadow: 0 0 0 3px #8b5cf633;
   }
-  .search-wrap input { padding-right: 80px; }
   .search-wrap input::placeholder { color: #484f58; }
   .search-slash {
     position: absolute;
@@ -1384,16 +1383,6 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && tipVisible) closeTooltip();
-  });
-
-  // Press / to focus search (skip if already in an input/textarea)
-  document.addEventListener('keydown', e => {
-    if (e.key !== '/') return;
-    const tag = document.activeElement.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-    e.preventDefault();
-    searchInput.focus();
-    searchInput.select();
   });
 
   // Press / to focus search (skip if already in an input/textarea)
