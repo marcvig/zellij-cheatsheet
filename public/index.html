@@ -909,7 +909,7 @@
 
 <!-- LEGEND -->
 <div class="legend">
-  <span data-cmd="Normal Mode" data-tip="Zellij's default mode. Always active unless locked. Use Ctrl+ combos to enter sub-modes (Pane, Tab, Scroll…), or Alt+ shortcuts for instant pane/tab navigation without entering a mode."><span class="badge badge-n">NRM</span> Normal</span>
+  <span data-cmd="Normal Mode" data-tip="Zellij's default mode, and where every sub-mode returns to (it is not active while you are in a sub-mode). Use Ctrl+ combos to enter sub-modes (Pane, Tab, Scroll…), or Alt+ shortcuts for instant pane/tab navigation without entering a mode (these work from any mode except Locked)."><span class="badge badge-n">NRM</span> Normal</span>
   <span data-cmd="Pane Mode" data-tip="Enter with Ctrl+p. Manage panes: open, close, focus, fullscreen, float. Press Esc or Enter to return to Normal mode. The status bar shows 'PANE' when active."><span class="badge badge-p">PNE</span> Pane</span>
   <span data-cmd="Tab Mode" data-tip="Enter with Ctrl+t. Manage tabs: create, close, rename, navigate. Press Esc or Enter to return to Normal mode. The status bar shows 'TAB' when active."><span class="badge badge-t">TAB</span> Tab</span>
   <span data-cmd="Scroll Mode" data-tip="Enter with Ctrl+s. Scroll through pane history, search text, edit scrollback in $EDITOR. Press Esc or Enter to exit. Particularly useful for long command output."><span class="badge badge-s">SCR</span> Scroll</span>
@@ -921,7 +921,7 @@
        MODES OVERVIEW
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header green" data-cmd="Zellij Modes" data-tip="Zellij is modal. Press a Ctrl+ key to enter a mode, then use single-key shortcuts within it. Press Esc or Enter to return to Normal. The status bar at the bottom always shows the active mode.">Modes &amp; Mode Entry</div>
+    <div class="card-header green" data-cmd="Zellij Modes" data-tip="Zellij is modal. Press a Ctrl+ key to enter a mode, then use single-key shortcuts within it. Press Esc or Enter to return to Normal from most modes (Locked needs Ctrl+g; some input modes differ). The status bar at the bottom always shows the active mode.">Modes &amp; Mode Entry</div>
     <table>
       <tr data-tip="Enter Pane mode to manage panes: create, close, focus, resize, float" data-example="Ctrl+p"><td>Ctrl+p</td><td>Enter Pane mode</td></tr>
       <tr data-tip="Enter Tab mode to manage tabs: create, close, rename, navigate" data-example="Ctrl+t"><td>Ctrl+t</td><td>Enter Tab mode</td></tr>
@@ -931,7 +931,7 @@
       <tr data-tip="Enter Session mode to manage Zellij sessions: detach, switch, create" data-example="Ctrl+o"><td>Ctrl+o</td><td>Enter Session mode</td></tr>
       <tr data-tip="Toggle Locked mode. Disables all Zellij keybindings and passes input directly to the terminal program. Useful for nested terminals or programs that use the same keys." data-example="Ctrl+g"><td>Ctrl+g</td><td>Toggle Locked mode</td></tr>
       <tr data-tip="From most modes, Esc or Enter returns to Normal. Exceptions: Locked mode (use Ctrl+g), the rename modes (Esc cancels to the parent Pane/Tab mode), and search-entry (Enter goes to Search, Esc to Scroll)." data-example="Esc"><td>Esc / Enter</td><td>Return to Normal (most modes)</td></tr>
-      <tr data-tip="Quit Zellij. Closes the current session" data-example="Ctrl+q" data-danger="Closes the entire Zellij session immediately"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
+      <tr data-tip="Quit Zellij. Ends the session for all connected clients. To leave it running, detach with Ctrl+o then d" data-example="Ctrl+q" data-danger="Closes the entire Zellij session immediately"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
     </table>
   </div>
 
@@ -972,7 +972,7 @@
       <tr data-tip="Open a new pane split below the current one (horizontal split)" data-example="Ctrl+p, d"><td>d</td><td>New pane (split down)</td></tr>
       <tr data-tip="Open a new pane split to the right of the current one (vertical split)" data-example="Ctrl+p, r"><td>r</td><td>New pane (split right)</td></tr>
       <tr data-tip="Open a new stacked pane below the current one. Stacked panes share the same space and can be cycled through" data-example="Ctrl+p, s"><td>s</td><td>New pane (stacked)</td></tr>
-      <tr data-tip="Close the currently focused pane. Prompts if it has a running process" data-example="Ctrl+p, x" data-danger="Closes the pane and terminates its running process"><td>x</td><td>Close pane</td></tr>
+      <tr data-tip="Close the currently focused pane immediately. This terminates its running process with no confirmation prompt." data-example="Ctrl+p, x" data-danger="Closes the pane and terminates its running process"><td>x</td><td>Close pane</td></tr>
       <tr data-tip="Toggle the current pane to occupy the entire terminal window. Press again to restore" data-example="Ctrl+p, f"><td>f</td><td>Toggle fullscreen</td></tr>
       <tr data-tip="Toggle all pane frame borders on/off globally. Useful for a cleaner, minimal look" data-example="Ctrl+p, z"><td>z</td><td>Toggle pane frames</td></tr>
       <tr data-tip="Show or hide all floating panes at once. Toggles the entire floating layer" data-example="Ctrl+p, w"><td>w</td><td>Toggle floating panes</td></tr>
@@ -1040,7 +1040,7 @@
        SCROLL & SEARCH
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header red" data-cmd="Scroll & Search" data-tip="Enter Scroll mode with Ctrl+s. Scroll through the pane's scrollback buffer without needing a mouse. Press / to search the scrollback. Press e to edit the full buffer in $EDITOR. Press Esc to return to Normal.">Scroll &amp; Search (Ctrl+s → key)</div>
+    <div class="card-header red" data-cmd="Scroll & Search" data-tip="Enter Scroll mode with Ctrl+s. Scroll through the pane's scrollback buffer without needing a mouse. Press s to search the scrollback. Press e to edit the full buffer in $EDITOR. Press Esc to return to Normal.">Scroll &amp; Search (Ctrl+s → key)</div>
     <table>
       <tr data-tip="Scroll down one line through the pane's scrollback history" data-example="Ctrl+s, j"><td>j / ↓</td><td>Scroll down</td></tr>
       <tr data-tip="Scroll up one line through the pane's scrollback history" data-example="Ctrl+s, k"><td>k / ↑</td><td>Scroll up</td></tr>
@@ -1128,7 +1128,7 @@
       <tr data-tip="Open a new tab with the given name via CLI action. Useful in scripts" data-example="zellij action new-tab --name mytab"><td>zellij action new-tab --name &lt;name&gt;</td><td>New tab (via action)</td></tr>
       <tr data-tip="Close the focused pane from a CLI action. Scriptable pane control" data-example="zellij action close-pane"><td>zellij action close-pane</td><td>Close pane (via action)</td></tr>
       <tr data-tip="Zellij&#39;s cache dir (scrollback, session state). Platform-specific: Linux ~/.cache/zellij/, macOS ~/Library/Caches/org.Zellij-Contributors.Zellij/. Run 'zellij setup --check' for the exact path." data-example="zellij setup --check"><td>~/.cache/zellij/</td><td>Cache directory (Linux)</td></tr>
-      <tr data-tip="Plugins are WebAssembly (.wasm) modules referenced explicitly (file: path, zellij: built-in, http(s): URL, or an alias) via layouts, keybindings, or the CLI. There is no auto-loaded plugin folder; this path is just a common place to keep them." data-example="~/.config/zellij/plugins/"><td>~/.config/zellij/plugins/</td><td>Where plugins live (referenced explicitly)</td></tr>
+      <tr data-tip="The default plugin location is the DATA dir: ~/.local/share/zellij/plugins/ on Linux (macOS: ~/Library/Application Support/org.Zellij-Contributors.Zellij). Run zellij setup --check to see it. Plugins are .wasm modules loaded by explicit reference (file:, zellij:, http(s):, or an alias), not auto-discovered from a folder." data-example="zellij setup --check"><td>~/.local/share/zellij/plugins/</td><td>Default plugin location (data dir)</td></tr>
       <tr data-tip="Strider is Zellij's built-in file explorer plugin. Navigate and open files without leaving the terminal" data-example="zellij -l strider"><td>zellij -l strider</td><td>Built-in file explorer (Strider)</td></tr>
     </table>
   </div>
@@ -1147,7 +1147,7 @@
       <tr data-tip="tmux enters scroll/copy mode with prefix+[. In Zellij: Ctrl+s enters Scroll mode directly." data-example="Ctrl+s"><td>prefix + [ → Ctrl+s</td><td>Enter scroll / copy mode</td></tr>
       <tr data-tip="tmux zooms a pane with prefix+z. In Zellij: enter Pane mode with Ctrl+p, then press f for fullscreen." data-example="Ctrl+p, f"><td>prefix + z → Ctrl+p, f</td><td>Zoom / fullscreen pane</td></tr>
       <tr data-tip="tmux kills a pane with prefix+x. In Zellij: enter Pane mode with Ctrl+p, then press x." data-example="Ctrl+p, x"><td>prefix + x → Ctrl+p, x</td><td>Kill pane</td></tr>
-      <tr data-tip="tmux navigates panes with prefix+arrow. In Zellij use Alt+h/j/k/l without entering any mode." data-example="Alt+h"><td>prefix + ↑↓←→ → Alt+h/j/k/l</td><td>Navigate panes (no prefix needed)</td></tr>
+      <tr data-tip="tmux navigates panes with prefix+arrow. In Zellij use Alt+h/j/k/l without entering any mode." data-example="Alt+h"><td>prefix + ←↓↑→ → Alt+h/j/k/l</td><td>Navigate panes (no prefix needed)</td></tr>
       <tr data-tip="tmux renames a session with prefix+$. Zellij has no single rename keybind: open the session-manager (Ctrl+o then w) and press Ctrl+r, or run zellij action rename-session &quot;name&quot; from a pane." data-example="Ctrl+o, w, Ctrl+r"><td>prefix + $ → Ctrl+o, w, Ctrl+r</td><td>Rename session</td></tr>
       <tr data-tip="tmux CLI: new-session -s name. Zellij equivalent: zellij -s name" data-example="zellij -s mywork"><td>new-session -s → zellij -s</td><td>Create named session</td></tr>
       <tr data-tip="tmux CLI: attach-session -t name. Zellij equivalent: zellij attach name" data-example="zellij attach mywork"><td>attach-session → zellij attach</td><td>Attach to session</td></tr>
