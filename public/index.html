@@ -931,7 +931,7 @@
       <tr data-tip="Enter Session mode to manage Zellij sessions: detach, switch, create" data-example="Ctrl+o"><td>Ctrl+o</td><td>Enter Session mode</td></tr>
       <tr data-tip="Toggle Locked mode. Disables all Zellij keybindings and passes input directly to the terminal program. Useful for nested terminals or programs that use the same keys." data-example="Ctrl+g"><td>Ctrl+g</td><td>Toggle Locked mode</td></tr>
       <tr data-tip="From most modes, Esc or Enter returns to Normal. Exceptions: Locked mode (use Ctrl+g), the rename modes (Esc cancels to the parent Pane/Tab mode), and search-entry (Enter goes to Search, Esc to Scroll)." data-example="Esc"><td>Esc / Enter</td><td>Return to Normal (most modes)</td></tr>
-      <tr data-tip="Quit Zellij. Ends the session for all connected clients. To leave it running, detach with Ctrl+o then d" data-example="Ctrl+q" data-danger="Closes the entire Zellij session immediately"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
+      <tr data-tip="Quit this client and exit Zellij. The session ends only when no other clients remain attached (normally the case, since most setups have one client). To leave the session running, detach instead with Ctrl+o then d." data-example="Ctrl+q" data-danger="Ends the session if you are its last attached client"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
     </table>
   </div>
 
@@ -1128,7 +1128,7 @@
       <tr data-tip="Open a new tab with the given name via CLI action. Useful in scripts" data-example="zellij action new-tab --name mytab"><td>zellij action new-tab --name &lt;name&gt;</td><td>New tab (via action)</td></tr>
       <tr data-tip="Close the focused pane from a CLI action. Scriptable pane control" data-example="zellij action close-pane"><td>zellij action close-pane</td><td>Close pane (via action)</td></tr>
       <tr data-tip="Zellij&#39;s cache dir (scrollback, session state). Platform-specific: Linux ~/.cache/zellij/, macOS ~/Library/Caches/org.Zellij-Contributors.Zellij/. Run 'zellij setup --check' for the exact path." data-example="zellij setup --check"><td>~/.cache/zellij/</td><td>Cache directory (Linux)</td></tr>
-      <tr data-tip="The default plugin location is the DATA dir: ~/.local/share/zellij/plugins/ on Linux (macOS: ~/Library/Application Support/org.Zellij-Contributors.Zellij). Run zellij setup --check to see it. Plugins are .wasm modules loaded by explicit reference (file:, zellij:, http(s):, or an alias), not auto-discovered from a folder." data-example="zellij setup --check"><td>~/.local/share/zellij/plugins/</td><td>Default plugin location (data dir)</td></tr>
+      <tr data-tip="The default plugin location is the DATA dir: ~/.local/share/zellij/plugins/ on Linux (macOS: ~/Library/Application Support/org.Zellij-Contributors.Zellij/plugins/). Run zellij setup --check to see it. Plugins are .wasm modules loaded by explicit reference (file:, zellij:, http(s):, or an alias), not auto-discovered from a folder." data-example="zellij setup --check"><td>~/.local/share/zellij/plugins/</td><td>Default plugin location (data dir)</td></tr>
       <tr data-tip="Strider is Zellij's built-in file explorer plugin. Navigate and open files without leaving the terminal" data-example="zellij -l strider"><td>zellij -l strider</td><td>Built-in file explorer (Strider)</td></tr>
     </table>
   </div>
