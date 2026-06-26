@@ -930,7 +930,7 @@
       <tr data-tip="Enter Scroll mode to scroll pane history and search output" data-example="Ctrl+s"><td>Ctrl+s</td><td>Enter Scroll mode</td></tr>
       <tr data-tip="Enter Session mode to manage Zellij sessions — detach, switch, create" data-example="Ctrl+o"><td>Ctrl+o</td><td>Enter Session mode</td></tr>
       <tr data-tip="Toggle Locked mode — disables all Zellij keybindings and passes input directly to the terminal program. Useful for nested terminals or programs that use the same keys." data-example="Ctrl+g"><td>Ctrl+g</td><td>Toggle Locked mode</td></tr>
-      <tr data-tip="Exit the current mode and return to Normal mode — works from any mode" data-example="Esc"><td>Esc / Enter</td><td>Return to Normal mode</td></tr>
+      <tr data-tip="From most modes, Esc or Enter returns to Normal. Exceptions: Locked mode (use Ctrl+g), the rename modes (Esc cancels to the parent Pane/Tab mode), and search-entry (Enter goes to Search, Esc to Scroll)." data-example="Esc"><td>Esc / Enter</td><td>Return to Normal (most modes)</td></tr>
       <tr data-tip="Quit Zellij — closes the current session" data-example="Ctrl+q" data-danger="Closes the entire Zellij session immediately"><td>Ctrl+q</td><td>Quit Zellij</td></tr>
     </table>
   </div>
@@ -942,8 +942,8 @@
     <div class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in any mode (except Locked) without entering a sub-mode. They're the fastest way to navigate panes and tabs — no mode switch needed. Focus moves immediately on keypress.">Normal Mode — Alt+ Quick Keys</div>
     <table>
       <tr data-tip="Move focus to the pane on the left — if already at the leftmost pane, switches to the previous tab (MoveFocusOrTab)" data-example="Alt+h"><td>Alt+h / Alt+←</td><td>Focus pane left (or prev tab)</td></tr>
-      <tr data-tip="Move focus to the pane below — wraps around if at the edge" data-example="Alt+j"><td>Alt+j / Alt+↓</td><td>Focus pane down</td></tr>
-      <tr data-tip="Move focus to the pane above — wraps around if at the edge" data-example="Alt+k"><td>Alt+k / Alt+↑</td><td>Focus pane up</td></tr>
+      <tr data-tip="Move focus to the pane below (MoveFocus Down). Does not wrap: at the bottom edge, focus stays put." data-example="Alt+j"><td>Alt+j / Alt+↓</td><td>Focus pane down</td></tr>
+      <tr data-tip="Move focus to the pane above (MoveFocus Up). Does not wrap: at the top edge, focus stays put." data-example="Alt+k"><td>Alt+k / Alt+↑</td><td>Focus pane up</td></tr>
       <tr data-tip="Move focus to the pane on the right — if already at the rightmost pane, switches to the next tab (MoveFocusOrTab)" data-example="Alt+l"><td>Alt+l / Alt+→</td><td>Focus pane right (or next tab)</td></tr>
       <tr data-tip="Open a new pane in the focused area — uses a shell defined by $SHELL" data-example="Alt+n"><td>Alt+n</td><td>New pane (quick)</td></tr>
       <tr data-tip="Toggle showing/hiding all floating panes at once" data-example="Alt+f"><td>Alt+f</td><td>Toggle floating panes</td></tr>
@@ -1048,11 +1048,11 @@
       <tr data-tip="Scroll up one full page (Ctrl+b or PageUp)" data-example="Ctrl+s, Ctrl+b"><td>Ctrl+b / PageUp</td><td>Page up</td></tr>
       <tr data-tip="Scroll down half a screen at a time" data-example="Ctrl+s, d"><td>d</td><td>Half page down</td></tr>
       <tr data-tip="Scroll up half a screen at a time" data-example="Ctrl+s, u"><td>u</td><td>Half page up</td></tr>
-      <tr data-tip="Jump to the very top of the scrollback buffer (oldest output)" data-example="Ctrl+s, g"><td>g / Home</td><td>Go to top</td></tr>
-      <tr data-tip="Jump to the very bottom of the scrollback buffer (most recent output)" data-example="Ctrl+s, G"><td>G / End</td><td>Go to bottom</td></tr>
-      <tr data-tip="Enter search mode within the scrollback — type a query and press Enter. Results are highlighted in the buffer." data-example="Ctrl+s, /"><td>/</td><td>Search scrollback</td></tr>
-      <tr data-tip="Jump to the next search match in the scrollback (wraps around)" data-example="Ctrl+s, n"><td>n</td><td>Next search match</td></tr>
-      <tr data-tip="Jump to the previous search match in the scrollback" data-example="Ctrl+s, p"><td>p</td><td>Previous search match</td></tr>
+      <tr data-tip="Scroll mode has no default go-to-top key. Press e to open the scrollback in $EDITOR and jump to the top, or bind ScrollToTop yourself. (Ctrl+c jumps to the bottom.)" data-example="Ctrl+s, e"><td>(no default key)</td><td>Go to top of scrollback</td></tr>
+      <tr data-tip="Jump to the bottom of the scrollback (most recent output). Also exits Scroll mode back to Normal." data-example="Ctrl+s, Ctrl+c"><td>Ctrl+c</td><td>Go to bottom (and exit)</td></tr>
+      <tr data-tip="Press s, type a query, then Enter to move into Search mode where matches are highlighted." data-example="Ctrl+s, s"><td>s</td><td>Search scrollback</td></tr>
+      <tr data-tip="Next search match. Available in Search mode (reached via s, query, Enter), not base Scroll mode." data-example="n"><td>n</td><td>Next search match (Search mode)</td></tr>
+      <tr data-tip="Previous search match. Available in Search mode (reached via s, query, Enter), not base Scroll mode." data-example="p"><td>p</td><td>Prev search match (Search mode)</td></tr>
       <tr data-tip="Open the entire scrollback buffer in your $EDITOR (e.g., vim, nvim) for reading, copying, or searching. Returns to Zellij when the editor exits." data-example="Ctrl+s, e"><td>e</td><td>Edit scrollback in $EDITOR</td></tr>
     </table>
   </div>
@@ -1080,8 +1080,9 @@
     <div class="card-header" data-cmd="CLI Commands" data-tip="Run these in your terminal before starting Zellij, or in a shell pane inside Zellij. Most session management can also be done via CLI — useful in scripts and automation.">CLI Commands</div>
     <table>
       <tr data-tip="Start Zellij with the default layout and a new unnamed session" data-example="zellij"><td>zellij</td><td>Start Zellij</td></tr>
-      <tr data-tip="Start Zellij using a named layout (built-in: default, compact, disable-status-bar)" data-example="zellij -l compact"><td>zellij -l &lt;layout&gt;</td><td>Start with a layout</td></tr>
-      <tr data-tip="Start a new Zellij session with a specific name, or attach if it already exists" data-example="zellij -s mywork"><td>zellij -s &lt;name&gt;</td><td>Start / attach named session</td></tr>
+      <tr data-tip="Start Zellij using a named layout. Built-ins: default, compact, strider, classic, disable-status-bar." data-example="zellij -l compact"><td>zellij -l &lt;layout&gt;</td><td>Start with a layout</td></tr>
+      <tr data-tip="Start a NEW named session. If that name already exists this errors; to attach-or-create use zellij attach -c &lt;name&gt;." data-example="zellij -s mywork"><td>zellij -s &lt;name&gt;</td><td>Start new named session</td></tr>
+      <tr data-tip="Attach to a session by name, creating it if it does not exist (the -c flag). This is the attach-or-create form." data-example="zellij attach -c mywork"><td>zellij attach -c &lt;name&gt;</td><td>Attach (or create) session</td></tr>
       <tr data-tip="Attach to an existing named session that is running in the background" data-example="zellij attach mywork"><td>zellij attach &lt;name&gt;</td><td>Attach to session</td></tr>
       <tr data-tip="Attach to a session if it exists, or create it if it doesn't — the -c flag means 'create if missing'" data-example="zellij attach -c mywork"><td>zellij attach -c &lt;name&gt;</td><td>Attach or create session</td></tr>
       <tr data-tip="List all running Zellij sessions with their names and status" data-example="zellij list-sessions"><td>zellij list-sessions</td><td>List sessions</td></tr>
@@ -1090,8 +1091,8 @@
       <tr data-tip="Terminate all running Zellij sessions at once" data-example="zellij kill-all-sessions" data-danger="Terminates ALL sessions — use with care"><td>zellij kill-all-sessions</td><td>Kill all sessions</td></tr>
       <tr data-tip="Remove a session's stored state from disk (for sessions that have already exited)" data-example="zellij delete-session mywork"><td>zellij delete-session &lt;name&gt;</td><td>Delete session</td></tr>
       <tr data-tip="Delete all stored session state from disk" data-example="zellij delete-all-sessions"><td>zellij delete-all-sessions</td><td>Delete all sessions</td></tr>
-      <tr data-tip="Print the full default Zellij configuration (YAML) to stdout — redirect to a file to customize it" data-example="zellij setup --dump-config"><td>zellij setup --dump-config</td><td>Print default config</td></tr>
-      <tr data-tip="Print a named built-in layout to stdout — useful as a starting point for custom layouts" data-example="zellij setup --dump-layout default"><td>zellij setup --dump-layout &lt;name&gt;</td><td>Print built-in layout</td></tr>
+      <tr data-tip="Print the full default Zellij configuration (KDL) to stdout. Redirect to ~/.config/zellij/config.kdl to customize it." data-example="zellij setup --dump-config"><td>zellij setup --dump-config</td><td>Print default config</td></tr>
+      <tr data-tip="Print a named built-in layout to stdout, useful as a starting point for custom layouts. Accepted names: default, strider, compact, classic, disable-status." data-example="zellij setup --dump-layout default"><td>zellij setup --dump-layout &lt;name&gt;</td><td>Print built-in layout</td></tr>
     </table>
   </div>
 
@@ -1101,13 +1102,13 @@
   <div class="card">
     <div class="card-header teal" data-cmd="Layouts & Configuration" data-tip="Zellij layouts are KDL files that define the initial pane/tab arrangement. Store them in ~/.config/zellij/layouts/. The config file lives at ~/.config/zellij/config.kdl (or wherever $ZELLIJ_CONFIG_DIR points).">Layouts &amp; Configuration</div>
     <table>
-      <tr data-tip="Built-in layouts included with Zellij — use them directly with 'zellij -l <name>'" data-example="zellij -l compact"><td>default / compact</td><td>Built-in layouts</td></tr>
+      <tr data-tip="Built-in layouts included with Zellij, usable directly with 'zellij -l &lt;name&gt;'." data-example="zellij -l compact"><td>default, compact, strider, classic, disable-status-bar</td><td>Built-in layouts</td></tr>
       <tr data-tip="Store custom layout files here — Zellij will find them by name automatically" data-example="~/.config/zellij/layouts/"><td>~/.config/zellij/layouts/</td><td>Custom layout directory</td></tr>
       <tr data-tip="The main Zellij config file — customize keybindings, theme, default shell, scrollback size, etc." data-example="~/.config/zellij/config.kdl"><td>~/.config/zellij/config.kdl</td><td>Config file location</td></tr>
       <tr data-tip="Override the config file location with an environment variable" data-example="export ZELLIJ_CONFIG_DIR=~/.zellij"><td>$ZELLIJ_CONFIG_DIR</td><td>Override config directory</td></tr>
-      <tr data-tip="Auto-start Zellij when opening a terminal — add to ~/.zshrc or ~/.bashrc. Only starts if not already inside a Zellij session." data-example="eval $(zellij setup --generate-auto-start zsh)"><td>zellij setup --generate-auto-start</td><td>Auto-start shell integration</td></tr>
-      <tr data-tip="Compact layout hides the status bar and tab bar — maximizes terminal space" data-example="zellij -l compact"><td>zellij -l compact</td><td>Compact (no status bar)</td></tr>
-      <tr data-tip="Inside a KDL layout file, set the default shell for all panes" data-example="command &quot;fish&quot;"><td>command &quot;&lt;shell&gt;&quot;</td><td>Set pane shell in layout</td></tr>
+      <tr data-tip="Auto-start Zellij when opening a terminal. Requires a shell argument (bash, zsh, or fish) and must be eval&#39;d into your rc file. Only starts if not already inside a Zellij session." data-example="eval &quot;$(zellij setup --generate-auto-start zsh)&quot;"><td>zellij setup --generate-auto-start &lt;shell&gt;</td><td>Auto-start shell integration</td></tr>
+      <tr data-tip="Compact layout merges the status bar and tab bar into one compact-bar; it still shows the session name, current mode, and open tabs, just on a single line." data-example="zellij -l compact"><td>zellij -l compact</td><td>Compact one-line bar</td></tr>
+      <tr data-tip="In a KDL layout, run a specific program in THIS pane instead of the default shell (per-pane). To set the shell for all panes, use the default_shell config option." data-example="command &quot;fish&quot;"><td>command &quot;&lt;program&gt;&quot;</td><td>Run a program in a pane</td></tr>
       <tr data-tip="Check the Zellij version installed on your system" data-example="zellij --version"><td>zellij --version</td><td>Show version</td></tr>
     </table>
   </div>
@@ -1118,13 +1119,13 @@
   <div class="card">
     <div class="card-header" data-cmd="Plugins & Tips" data-tip="Zellij has a WebAssembly plugin system. Plugins can add new panes, UI elements, and actions. The session manager (Ctrl+o → w) and file browser are examples of built-in plugins.">Plugins &amp; Tips</div>
     <table>
-      <tr data-tip="Zellij sets this env var to '1' inside all its panes — use it in scripts to detect if you're inside a session" data-example="echo $ZELLIJ"><td>$ZELLIJ</td><td>Detect if inside Zellij</td></tr>
+      <tr data-tip="Zellij sets this env var to '0' inside its panes. Detect a session by its presence, e.g. [ -n &quot;$ZELLIJ&quot; ], not by its value." data-example="echo $ZELLIJ"><td>$ZELLIJ</td><td>Detect if inside Zellij</td></tr>
       <tr data-tip="Zellij sets this to the session name — useful in your prompt or scripts" data-example="echo $ZELLIJ_SESSION_NAME"><td>$ZELLIJ_SESSION_NAME</td><td>Current session name</td></tr>
       <tr data-tip="Send an action to Zellij from inside a pane — useful in scripts and aliases" data-example="zellij action new-tab"><td>zellij action &lt;action&gt;</td><td>Send action from CLI</td></tr>
       <tr data-tip="Open a new tab with the given name via CLI action — useful in scripts" data-example="zellij action new-tab --name mytab"><td>zellij action new-tab --name &lt;name&gt;</td><td>New tab (via action)</td></tr>
       <tr data-tip="Close the focused pane from a CLI action — scriptable pane control" data-example="zellij action close-pane"><td>zellij action close-pane</td><td>Close pane (via action)</td></tr>
-      <tr data-tip="Zellij stores scrollback and session state here — safe to delete if you want a clean slate" data-example="~/.cache/zellij/"><td>~/.cache/zellij/</td><td>Session cache directory</td></tr>
-      <tr data-tip="Plugins are WebAssembly (.wasm) files — community plugins available on GitHub" data-example="~/.config/zellij/plugins/"><td>~/.config/zellij/plugins/</td><td>Plugin directory</td></tr>
+      <tr data-tip="Zellij&#39;s cache dir (scrollback, session state). Platform-specific: Linux ~/.cache/zellij/, macOS ~/Library/Caches/org.Zellij-Contributors.Zellij/. Run 'zellij setup --check' for the exact path." data-example="zellij setup --check"><td>~/.cache/zellij/</td><td>Cache directory (Linux)</td></tr>
+      <tr data-tip="Plugins are WebAssembly (.wasm) modules referenced explicitly (file: path, zellij: built-in, http(s): URL, or an alias) via layouts, keybindings, or the CLI. There is no auto-loaded plugin folder; this path is just a common place to keep them." data-example="~/.config/zellij/plugins/"><td>~/.config/zellij/plugins/</td><td>Where plugins live (referenced explicitly)</td></tr>
       <tr data-tip="Strider is Zellij's built-in file explorer plugin — navigate and open files without leaving the terminal" data-example="zellij -l strider"><td>zellij -l strider</td><td>Built-in file explorer (Strider)</td></tr>
     </table>
   </div>
@@ -1144,7 +1145,7 @@
       <tr data-tip="tmux zooms a pane with prefix+z. In Zellij: enter Pane mode with Ctrl+p, then press f for fullscreen." data-example="Ctrl+p, f"><td>prefix + z → Ctrl+p, f</td><td>Zoom / fullscreen pane</td></tr>
       <tr data-tip="tmux kills a pane with prefix+x. In Zellij: enter Pane mode with Ctrl+p, then press x." data-example="Ctrl+p, x"><td>prefix + x → Ctrl+p, x</td><td>Kill pane</td></tr>
       <tr data-tip="tmux navigates panes with prefix+arrow. In Zellij use Alt+h/j/k/l without entering any mode." data-example="Alt+h"><td>prefix + ↑↓←→ → Alt+h/j/k/l</td><td>Navigate panes (no prefix needed)</td></tr>
-      <tr data-tip="tmux renames a session with prefix+$. In Zellij: enter Session mode with Ctrl+o, then press r." data-example="Ctrl+o, r"><td>prefix + $ → Ctrl+o, r</td><td>Rename session</td></tr>
+      <tr data-tip="tmux renames a session with prefix+$. Zellij has no default keybind for it: run zellij action rename-session &quot;name&quot;, or open the session-manager (Ctrl+o then w) and press Ctrl+r." data-example="zellij action rename-session &quot;name&quot;"><td>prefix + $ → rename-session</td><td>Rename session</td></tr>
       <tr data-tip="tmux CLI: new-session -s name. Zellij equivalent: zellij -s name" data-example="zellij -s mywork"><td>new-session -s → zellij -s</td><td>Create named session</td></tr>
       <tr data-tip="tmux CLI: attach-session -t name. Zellij equivalent: zellij attach name" data-example="zellij attach mywork"><td>attach-session → zellij attach</td><td>Attach to session</td></tr>
       <tr data-tip="tmux CLI: kill-session -t name. Zellij equivalent: zellij kill-session name" data-example="zellij kill-session mywork"><td>kill-session → zellij kill-session</td><td>Kill session</td></tr>
