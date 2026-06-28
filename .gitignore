@@ -6,3 +6,7 @@
 !.env.example
 .DS_Store
 .claude/
+
+# local AI/dev notes (not for the public repo)
+CLAUDE.md
+AGENTS.md
