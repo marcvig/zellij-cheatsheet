@@ -23,10 +23,13 @@
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="theme-color" content="#0f1117">
 <script>
-  // Apply saved theme before paint to avoid flash
-  if (localStorage.getItem('zellij-theme') === 'light') document.documentElement.classList.add('preload-light');
+  // localStorage can throw (site data blocked, sandboxed frames); never let
+  // that stop the theme, keyboard, or binding scripts from initializing.
+  window.safeStorage = {
+    get(k)    { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+  };
 </script>
-<style> .preload-light body, html.preload-light body { background: #ffffff; } </style>
 
 <!-- ============================================================
      CANONICAL
@@ -787,6 +790,10 @@
 </style>
 </head>
 <body>
+<script>
+  // Apply saved theme before first paint so light mode never flashes dark text
+  if (safeStorage.get('zellij-theme') === 'light') document.body.classList.add('light');
+</script>
 <!-- cs-meganav:start -->
   <style>
   .cs-meganav { display: none; }
@@ -1618,12 +1625,7 @@
 <script>
   const themeToggle = document.getElementById('themeToggle');
 
-  // Apply saved preference on load
-  const savedTheme = localStorage.getItem('zellij-theme');
-  if (savedTheme === 'light') {
-    document.body.classList.add('light');
-  }
-  document.documentElement.classList.remove('preload-light');
+  // Saved preference is applied by the inline script at the top of <body>
 
   function updateIcon() {
     themeToggle.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
@@ -1632,7 +1634,7 @@
 
   themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('light');
-    localStorage.setItem('zellij-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    safeStorage.set('zellij-theme', document.body.classList.contains('light') ? 'light' : 'dark');
     updateIcon();
   });
 </script>
@@ -1679,17 +1681,17 @@
   }
 
   // Load saved preference
-  const savedKb = localStorage.getItem('zellij-keyboard');
+  const savedKb = safeStorage.get('zellij-keyboard');
   if (savedKb === 'mac') applyKeyboard(true);
 
   kbPc.addEventListener('click', () => {
     applyKeyboard(false);
-    localStorage.setItem('zellij-keyboard', 'pc');
+    safeStorage.set('zellij-keyboard', 'pc');
   });
 
   kbMac.addEventListener('click', () => {
     applyKeyboard(true);
-    localStorage.setItem('zellij-keyboard', 'mac');
+    safeStorage.set('zellij-keyboard', 'mac');
   });
 </script>
 
@@ -1700,10 +1702,10 @@
   const STORAGE_KEY = 'zellij-custom-bindings';
 
   function loadBindings() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    try { return JSON.parse(safeStorage.get(STORAGE_KEY) || '{}'); }
     catch { return {}; }
   }
-  function saveBindings(b) { localStorage.setItem(STORAGE_KEY, JSON.stringify(b)); }
+  function saveBindings(b) { safeStorage.set(STORAGE_KEY, JSON.stringify(b)); }
   function escHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
