@@ -1665,8 +1665,12 @@
       tr.dataset.example = swapAlt(tr.dataset.example, mac);
     });
 
-    // 5. Re-apply custom bindings that were wiped by the DOM update above
-    window.onSearchUpdate && window.onSearchUpdate();
+    // 5. Keep the binding editor's stored defaults in the active label style
+    window.onKeyboardSwap && window.onKeyboardSwap(mac);
+
+    // 6. Re-apply search highlights and custom bindings wiped by the DOM update above
+    if (searchInput.value.trim()) searchInput.dispatchEvent(new Event('input'));
+    else window.onSearchUpdate && window.onSearchUpdate();
   }
 
   // Load saved preference
@@ -1904,6 +1908,15 @@
       } else {
         if (!td.querySelector('.zj-edit-btn')) injectEditBtn(row);
       }
+    });
+  };
+
+  // Mac/PC toggle hook: rowMeta is snapshotted once at init, so swap its
+  // labels too, or "Restore default" brings back the other keyboard's text.
+  window.onKeyboardSwap = function (mac) {
+    rowMeta.forEach(meta => {
+      meta.originalHtml = swapAlt(meta.originalHtml, mac);
+      meta.originalText = swapAlt(meta.originalText, mac);
     });
   };
 
