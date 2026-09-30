@@ -190,11 +190,13 @@
     border-radius: 4px;
     line-height: 1;
     opacity: 0;
+    visibility: hidden; /* out of the Tab order while hidden */
     pointer-events: none;
-    transition: opacity 0.15s, color 0.15s;
+    transition: opacity 0.15s, color 0.15s, visibility 0.15s;
   }
   .search-clear.visible {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
   .search-clear:hover { color: #e2e8f0; }
@@ -384,13 +386,15 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
+    visibility: hidden; /* out of the Tab order while hidden */
     pointer-events: none;
     transform: translateY(10px);
-    transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s, border-color 0.2s;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s, background 0.2s, border-color 0.2s;
     z-index: 100;
   }
   .back-to-top.visible {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
     transform: translateY(0);
   }
@@ -839,7 +843,10 @@
 <body>
 <script>
   // Apply saved theme before first paint so light mode never flashes dark text
-  if (safeStorage.get('zellij-theme') === 'light') document.body.classList.add('light');
+  if (safeStorage.get('zellij-theme') === 'light') {
+    document.body.classList.add('light');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
+  }
 </script>
 <!-- cs-meganav:start -->
   <nav class="cs-meganav" id="csMeganav" aria-label="Other Vigod Labs cheatsheets">
@@ -1252,7 +1259,9 @@
   // text is never re-parsed as markup. Matching runs on the cell's joined
   // text, so a match spanning a placeholder boundary is marked piecewise.
   function highlight(root, query) {
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => n.parentElement.closest('.zj-edit-btn') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
     const nodes = [];
     let text = '';
     while (walker.nextNode()) {
@@ -1301,11 +1310,13 @@
     searchSlash.classList.toggle('hidden', hasValue);
     const query = searchInput.value.trim().toLowerCase();
 
-    // Reset
+    // Reset. Cells with an open binding editor are left alone so the edit survives
     originalCells.forEach(({ row }) => row.classList.remove('hidden-row'));
     cards.forEach(c => c.classList.remove('hidden'));
     originalCells.forEach(({ row, htmls }) => {
-      row.querySelectorAll('td').forEach((td, i) => { td.innerHTML = htmls[i]; });
+      row.querySelectorAll('td').forEach((td, i) => {
+        if (!td.classList.contains('zj-editing')) td.innerHTML = htmls[i];
+      });
     });
 
     if (!query) {
@@ -1317,11 +1328,13 @@
     }
 
     let totalVisible = 0;
-    originalCells.forEach(({ row, card, texts }) => {
-      const combined = texts.join(' ').toLowerCase();
+    const matched = [];
+    originalCells.forEach(({ row, texts }) => {
+      // Match the default text and any custom binding displayed in its place
+      const combined = [row.dataset.currentBinding || '', ...texts].join(' ').toLowerCase();
       if (combined.includes(query)) {
         totalVisible++;
-        row.querySelectorAll('td').forEach(td => highlight(td, query));
+        matched.push(row);
       } else {
         row.classList.add('hidden-row');
       }
@@ -1339,7 +1352,11 @@
       countEl.textContent = `${totalVisible} result${totalVisible !== 1 ? 's' : ''} found`;
       countEl.className = 'search-count';
     }
+    // Draw custom bindings and edit buttons first, then highlight what is shown
     window.onSearchUpdate && window.onSearchUpdate();
+    matched.forEach(row => row.querySelectorAll('td').forEach(td => {
+      if (!td.classList.contains('zj-editing')) highlight(td, query);
+    }));
     window.resetRoving && window.resetRoving();
   });
 </script>
@@ -1438,10 +1455,14 @@
       const th = tooltip.offsetHeight;
       let x, y;
       if (window.innerWidth <= 600) {
-        // Mobile: always place below the clicked row so it never covers the command
+        // Mobile: below the tapped row; flip above when it would not fit, so it
+        // never covers the command. Clamp only if neither side has room.
         x = 8;
         y = rect.bottom + 10;
-        if (y + th > window.innerHeight - 12) y = window.innerHeight - th - 12;
+        if (y + th > window.innerHeight - 12) {
+          const above = rect.top - th - 10;
+          y = above >= 8 ? above : window.innerHeight - th - 12;
+        }
       } else {
         x = rect.right + 12;
         y = rect.top;
@@ -1529,10 +1550,10 @@
       if (e.target !== row) return;
       const rows = visibleRows(card);
       const i = rows.indexOf(row);
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+      e.preventDefault(); // stay put at the first/last row instead of scrolling the page
       const next = { ArrowDown: rows[i + 1], ArrowUp: rows[i - 1], Home: rows[0], End: rows[rows.length - 1] }[e.key];
-      if (!next) return;
-      e.preventDefault();
-      next.focus();
+      if (next) next.focus();
     });
     // Desktop click
     row.addEventListener('click', e => {
@@ -1741,7 +1762,9 @@
 
   themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('light');
-    safeStorage.set('zellij-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    const light = document.body.classList.contains('light');
+    safeStorage.set('zellij-theme', light ? 'light' : 'dark');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', light ? '#ffffff' : '#0f1117');
     updateIcon();
   });
 </script>
@@ -1771,7 +1794,7 @@
       htmls[0]  = swapAlt(htmls[0],  mac);
       texts[0]  = swapAlt(texts[0],  mac);
       const cmd = row.querySelector('td:first-child');
-      if (cmd) cmd.innerHTML = htmls[0];
+      if (cmd && !cmd.classList.contains('zj-editing')) cmd.innerHTML = htmls[0];
     });
 
     // 4. Update data-example attributes (used by tooltips)
@@ -2063,7 +2086,9 @@
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'zellij-custom-bindings.json';
+    document.body.appendChild(a); // older Firefox ignores clicks on detached links
     a.click();
+    a.remove();
     // Revoking synchronously can cancel the download in some browsers
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
