@@ -1216,10 +1216,30 @@
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  function highlight(text, query) {
-    if (!query) return text;
-    const re = new RegExp(`(${escapeRegex(query)})`, 'gi');
-    return text.replace(re, '<mark>$1</mark>');
+  // Wrap matches in <mark> by walking text nodes, so the cell's processed
+  // HTML (placeholder spans, danger badge) survives and literal "<layout>"
+  // text is never re-parsed as markup.
+  function highlight(root, query) {
+    const re = new RegExp(escapeRegex(query), 'gi');
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      const frag = document.createDocumentFragment();
+      let last = 0, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        frag.append(text.slice(last, m.index));
+        const mark = document.createElement('mark');
+        mark.textContent = m[0];
+        frag.append(mark);
+        last = m.index + m[0].length;
+      }
+      if (last === 0) return;
+      frag.append(text.slice(last));
+      node.replaceWith(frag);
+    });
   }
 
   searchClear.addEventListener('click', () => {
@@ -1256,10 +1276,7 @@
       const combined = texts.join(' ').toLowerCase();
       if (combined.includes(query)) {
         totalVisible++;
-        const cells = row.querySelectorAll('td');
-        cells.forEach((td, i) => {
-          td.innerHTML = highlight(texts[i], searchInput.value.trim());
-        });
+        row.querySelectorAll('td').forEach(td => highlight(td, query));
       } else {
         row.classList.add('hidden-row');
       }
