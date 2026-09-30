@@ -497,6 +497,13 @@
     pointer-events: auto;
   }
   .tooltip.visible { display: block; }
+  .tooltip:focus { outline: none; }
+  tr[data-tip]:focus-visible,
+  .card-header[data-tip]:focus-visible,
+  .legend span[data-tip]:focus-visible { outline: 2px solid #c084fc; outline-offset: -2px; }
+  body.light tr[data-tip]:focus-visible,
+  body.light .card-header[data-tip]:focus-visible,
+  body.light .legend span[data-tip]:focus-visible { outline-color: #7c3aed; }
   .tooltip-close {
     position: absolute; top: 8px; right: 10px;
     background: none; border: none;
@@ -879,7 +886,7 @@
   <!-- cs-meganav:end -->
 
 <!-- Tooltip popup -->
-<div id="tooltip" class="tooltip" role="tooltip">
+<div id="tooltip" class="tooltip" role="dialog" aria-labelledby="tooltipCmd" aria-describedby="tooltipDesc" tabindex="-1">
   <button class="tooltip-close" id="tooltipClose" aria-label="Close">✕</button>
   <div class="tooltip-danger" id="tooltipDanger"></div>
   <div class="tooltip-cmd" id="tooltipCmd"></div>
@@ -1335,10 +1342,11 @@
   let autoCloseTimer = null;
   let tipVisible    = false;
   let activeRow     = null;
+  let returnFocusEl = null; // trigger to refocus when a keyboard-opened popup closes
 
   const tooltipExampleSection = document.getElementById('tooltipExampleSection');
 
-  function openTooltip(el) {
+  function openTooltip(el, viaKeyboard) {
     // Accent color. Matches the card header text color of the clicked row
     const cardHeader = el.closest?.('.card')?.querySelector('.card-header');
     const isLight = document.body.classList.contains('light');
@@ -1400,11 +1408,15 @@
     tooltipCopy.classList.remove('copied');
     tooltip.classList.add('visible');
     tipVisible = true;
+    if (activeRow && activeRow !== el) activeRow.setAttribute('aria-expanded', 'false');
     activeRow = el;
+    el.setAttribute('aria-expanded', 'true');
 
-    // Auto-close after 6 s. Resets on every new open
+    // Auto-close after 6 s. Resets on every new open; paused while the popup
+    // has focus or the pointer (see focusin / mouseenter below)
     clearTimeout(autoCloseTimer);
-    autoCloseTimer = setTimeout(closeTooltip, 6000);
+    returnFocusEl = viaKeyboard ? el : null;
+    if (!viaKeyboard) autoCloseTimer = setTimeout(closeTooltip, 6000);
 
     requestAnimationFrame(() => {
       const rect = el.getBoundingClientRect();
@@ -1424,14 +1436,35 @@
       }
       tooltip.style.left = Math.max(8, x) + 'px';
       tooltip.style.top  = Math.max(8, y) + 'px';
+      if (viaKeyboard) tooltip.focus({ preventScroll: true });
     });
   }
 
   function closeTooltip() {
     clearTimeout(autoCloseTimer);
+    const hadFocus = tooltip.contains(document.activeElement);
     tooltip.classList.remove('visible');
     tipVisible = false;
+    activeRow?.setAttribute('aria-expanded', 'false');
     activeRow = null;
+    if (hadFocus && returnFocusEl) returnFocusEl.focus({ preventScroll: true });
+    returnFocusEl = null;
+  }
+
+  // Keyboard access: every tip target is focusable, exposes its description
+  // to assistive tech, and opens the popup with Enter / Space.
+  function makeKeyboardTarget(el) {
+    el.tabIndex = 0;
+    el.setAttribute('aria-description', el.dataset.tip);
+    el.setAttribute('aria-haspopup', 'dialog');
+    el.setAttribute('aria-expanded', 'false');
+    el.setAttribute('aria-controls', 'tooltip');
+    el.addEventListener('keydown', e => {
+      if (e.target !== el || (e.key !== 'Enter' && e.key !== ' ')) return;
+      e.preventDefault();
+      if (tipVisible && activeRow === el) closeTooltip();
+      else openTooltip(el, true);
+    });
   }
 
   function scheduleClose() { hideTimer = setTimeout(closeTooltip, 120); }
@@ -1451,6 +1484,7 @@
   }, { passive: true });
 
   document.querySelectorAll('tr[data-tip]').forEach(row => {
+    makeKeyboardTarget(row);
     // Desktop click
     row.addEventListener('click', e => {
       if (tooltip.contains(e.target)) return;
@@ -1490,6 +1524,7 @@
   ];
 
   tipTargets.forEach(el => {
+    makeKeyboardTarget(el);
     el.addEventListener('click', e => {
       if (tooltip.contains(e.target)) return;
       e.stopPropagation();
@@ -1508,7 +1543,21 @@
     });
   });
 
-  tooltip.addEventListener('mouseenter', cancelClose);
+  tooltip.addEventListener('mouseenter', () => { cancelClose(); clearTimeout(autoCloseTimer); });
+  tooltip.addEventListener('focusin', () => clearTimeout(autoCloseTimer));
+
+  // Tabbing past either end of the popup closes it and returns to the trigger
+  tooltip.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const btns = [...tooltip.querySelectorAll('button')].filter(b => b.offsetParent !== null);
+    const active = document.activeElement;
+    const atStart = active === tooltip || active === btns[0];
+    const atEnd = active === btns[btns.length - 1];
+    if ((e.shiftKey && atStart) || (!e.shiftKey && atEnd)) {
+      e.preventDefault();
+      closeTooltip();
+    }
+  });
   tooltip.addEventListener('mouseleave', e => {
     const over = e.relatedTarget;
     if (!over || (!over.closest('.card-header[data-tip]') && !over.closest('.legend span[data-tip]'))) scheduleClose();
