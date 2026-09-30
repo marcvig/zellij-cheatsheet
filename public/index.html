@@ -262,6 +262,8 @@
     text-transform: uppercase;
     color: #c084fc;
     border-bottom: 1px solid #30363d;
+    margin: 0;
+    line-height: inherit;
   }
   .card-header.green  { color: #7ee787; }
   .card-header.orange { color: #f0883e; }
@@ -652,7 +654,8 @@
     line-height: 1;
   }
   tr[data-tip]:hover .zj-edit-btn,
-  tr.row-touched .zj-edit-btn { opacity: 1; }
+  tr.row-touched .zj-edit-btn,
+  tr:focus-within .zj-edit-btn { opacity: 1; }
   .zj-edit-btn:hover { color: #c084fc; background: #c084fc18; }
 
   /* Inline edit form */
@@ -894,11 +897,11 @@
 <!-- SEARCH -->
 <div class="search-wrap">
   <span class="search-icon">🔍</span>
-  <input type="text" id="search" placeholder="Type to filter commands…" autocomplete="off" spellcheck="false">
+  <input type="text" id="search" aria-label="Search commands" placeholder="Type to filter commands…" autocomplete="off" spellcheck="false">
   <span class="search-slash" id="searchSlash">/ to search</span>
   <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
 </div>
-<div class="search-count" id="count"></div>
+<div class="search-count" id="count" role="status" aria-live="polite"></div>
 
 <!-- KEYBOARD TOGGLE -->
 <div class="keyboard-toggle-wrap">
@@ -915,13 +918,14 @@
   <span data-cmd="Scroll Mode" data-tip="Enter with Ctrl+s. Scroll through pane history, search text, edit scrollback in $EDITOR. Press Esc or Enter to exit. Particularly useful for long command output."><span class="badge badge-s">SCR</span> Scroll</span>
 </div>
 
+<main>
 <div class="grid" id="grid">
 
   <!-- ══════════════════════════════════════════════════════════════════
        MODES OVERVIEW
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header green" data-cmd="Zellij Modes" data-tip="Zellij is modal. Press a Ctrl+ key to enter a mode, then use single-key shortcuts within it. Press Esc or Enter to return to Normal from most modes (Locked needs Ctrl+g; some input modes differ). The status bar at the bottom always shows the active mode.">Modes &amp; Mode Entry</div>
+    <h2 class="card-header green" data-cmd="Zellij Modes" data-tip="Zellij is modal. Press a Ctrl+ key to enter a mode, then use single-key shortcuts within it. Press Esc or Enter to return to Normal from most modes (Locked needs Ctrl+g; some input modes differ). The status bar at the bottom always shows the active mode.">Modes &amp; Mode Entry</h2>
     <table>
       <tr data-tip="Enter Pane mode to manage panes: create, close, focus, resize, float" data-example="Ctrl+p"><td>Ctrl+p</td><td>Enter Pane mode</td></tr>
       <tr data-tip="Enter Tab mode to manage tabs: create, close, rename, navigate" data-example="Ctrl+t"><td>Ctrl+t</td><td>Enter Tab mode</td></tr>
@@ -940,7 +944,7 @@
        ALT QUICK KEYS (NORMAL MODE)
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in any mode (except Locked) without entering a sub-mode. They're the fastest way to navigate panes and tabs. No mode switch needed. Focus moves immediately on keypress.">Normal Mode: Alt+ Quick Keys</div>
+    <h2 class="card-header" data-cmd="Alt Quick Keys" data-tip="Alt+ shortcuts work in any mode (except Locked) without entering a sub-mode. They're the fastest way to navigate panes and tabs. No mode switch needed. Focus moves immediately on keypress.">Normal Mode: Alt+ Quick Keys</h2>
     <table>
       <tr data-tip="Move focus to the pane on the left. If already at the leftmost pane, switches to the previous tab (MoveFocusOrTab)" data-example="Alt+h"><td>Alt+h / Alt+←</td><td>Focus pane left (or prev tab)</td></tr>
       <tr data-tip="Move focus to the pane below (MoveFocus Down). Does not wrap: at the bottom edge, focus stays put." data-example="Alt+j"><td>Alt+j / Alt+↓</td><td>Focus pane down</td></tr>
@@ -962,7 +966,7 @@
        PANE MANAGEMENT
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header orange" data-cmd="Pane Management" data-tip="Enter Pane mode with Ctrl+p, then press a single key. Panes are the terminal windows inside a tab. You can split, float, fullscreen, rename, and close them. Press Esc or Enter to exit Pane mode.">Pane Management (Ctrl+p → key)</div>
+    <h2 class="card-header orange" data-cmd="Pane Management" data-tip="Enter Pane mode with Ctrl+p, then press a single key. Panes are the terminal windows inside a tab. You can split, float, fullscreen, rename, and close them. Press Esc or Enter to exit Pane mode.">Pane Management (Ctrl+p → key)</h2>
     <table>
       <tr data-tip="Move pane focus to the left neighbor" data-example="Ctrl+p, h"><td>h / ←</td><td>Focus pane left</td></tr>
       <tr data-tip="Move pane focus to the pane below" data-example="Ctrl+p, j"><td>j / ↓</td><td>Focus pane down</td></tr>
@@ -989,7 +993,7 @@
        TAB MANAGEMENT
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header teal" data-cmd="Tab Management" data-tip="Enter Tab mode with Ctrl+t, then press a single key. Each tab holds its own pane layout. Use tabs to organize different projects or contexts within the same Zellij session.">Tab Management (Ctrl+t → key)</div>
+    <h2 class="card-header teal" data-cmd="Tab Management" data-tip="Enter Tab mode with Ctrl+t, then press a single key. Each tab holds its own pane layout. Use tabs to organize different projects or contexts within the same Zellij session.">Tab Management (Ctrl+t → key)</h2>
     <table>
       <tr data-tip="Switch to the previous tab in the tab bar (h, k, ← and ↑ all work)" data-example="Ctrl+t, h"><td>h / ← / k / ↑</td><td>Previous tab</td></tr>
       <tr data-tip="Switch to the next tab in the tab bar (l, j, → and ↓ all work)" data-example="Ctrl+t, l"><td>l / → / j / ↓</td><td>Next tab</td></tr>
@@ -1009,7 +1013,7 @@
        RESIZE PANES
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header yellow" data-cmd="Resize Panes" data-tip="Enter Resize mode with Ctrl+n. Grow or shrink the focused pane in any direction. Adjacent panes adjust automatically to fill the space. Hold the key to resize continuously.">Resize Panes (Ctrl+n → key)</div>
+    <h2 class="card-header yellow" data-cmd="Resize Panes" data-tip="Enter Resize mode with Ctrl+n. Grow or shrink the focused pane in any direction. Adjacent panes adjust automatically to fill the space. Hold the key to resize continuously.">Resize Panes (Ctrl+n → key)</h2>
     <table>
       <tr data-tip="Grow the focused pane to the left. Shrinks the left neighbor" data-example="Ctrl+n, h"><td>h / ←</td><td>Grow pane left</td></tr>
       <tr data-tip="Grow the focused pane downward. Shrinks the pane below" data-example="Ctrl+n, j"><td>j / ↓</td><td>Grow pane down</td></tr>
@@ -1028,7 +1032,7 @@
        MOVE PANES
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header purple" data-cmd="Move Panes" data-tip="Enter Move mode with Ctrl+h. Swap the focused pane with its neighbor in any direction. The pane keeps its content and running process. Only its position in the layout changes.">Move Panes (Ctrl+h → key)</div>
+    <h2 class="card-header purple" data-cmd="Move Panes" data-tip="Enter Move mode with Ctrl+h. Swap the focused pane with its neighbor in any direction. The pane keeps its content and running process. Only its position in the layout changes.">Move Panes (Ctrl+h → key)</h2>
     <table>
       <tr data-tip="Swap the focused pane with the pane to its left" data-example="Ctrl+h, h"><td>h / ←</td><td>Move pane left</td></tr>
       <tr data-tip="Swap the focused pane with the pane below it" data-example="Ctrl+h, j"><td>j / ↓</td><td>Move pane down</td></tr>
@@ -1043,7 +1047,7 @@
        SCROLL & SEARCH
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header red" data-cmd="Scroll & Search" data-tip="Enter Scroll mode with Ctrl+s. Scroll through the pane's scrollback buffer without needing a mouse. Press s to search the scrollback. Press [ or ] to jump between commands (needs OSC 133 shell integration). Press e to edit the full buffer in $EDITOR. Press Esc to return to Normal.">Scroll &amp; Search (Ctrl+s → key)</div>
+    <h2 class="card-header red" data-cmd="Scroll & Search" data-tip="Enter Scroll mode with Ctrl+s. Scroll through the pane's scrollback buffer without needing a mouse. Press s to search the scrollback. Press [ or ] to jump between commands (needs OSC 133 shell integration). Press e to edit the full buffer in $EDITOR. Press Esc to return to Normal.">Scroll &amp; Search (Ctrl+s → key)</h2>
     <table>
       <tr data-tip="Scroll down one line through the pane's scrollback history" data-example="Ctrl+s, j"><td>j / ↓</td><td>Scroll down</td></tr>
       <tr data-tip="Scroll up one line through the pane's scrollback history" data-example="Ctrl+s, k"><td>k / ↑</td><td>Scroll up</td></tr>
@@ -1071,7 +1075,7 @@
        SESSION MANAGEMENT
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header green" data-cmd="Session Management" data-tip="Enter Session mode with Ctrl+o. Sessions persist after detaching. Reconnect later with 'zellij attach'. Multiple sessions can run simultaneously, each with their own tabs and panes.">Session Management (Ctrl+o → key)</div>
+    <h2 class="card-header green" data-cmd="Session Management" data-tip="Enter Session mode with Ctrl+o. Sessions persist after detaching. Reconnect later with 'zellij attach'. Multiple sessions can run simultaneously, each with their own tabs and panes.">Session Management (Ctrl+o → key)</h2>
     <table>
       <tr data-tip="Detach from the current session. It keeps running in the background. Reconnect later with 'zellij attach <session-name>'" data-example="Ctrl+o, d"><td>d</td><td>Detach from session</td></tr>
       <tr data-tip="Open the Zellij session manager UI. Browse, switch, and create sessions interactively" data-example="Ctrl+o, w"><td>w</td><td>Open session manager</td></tr>
@@ -1090,7 +1094,7 @@
        CLI COMMANDS
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header" data-cmd="CLI Commands" data-tip="Run these in your terminal before starting Zellij, or in a shell pane inside Zellij. Most session management can also be done via CLI. Useful in scripts and automation.">CLI Commands</div>
+    <h2 class="card-header" data-cmd="CLI Commands" data-tip="Run these in your terminal before starting Zellij, or in a shell pane inside Zellij. Most session management can also be done via CLI. Useful in scripts and automation.">CLI Commands</h2>
     <table>
       <tr data-tip="Start Zellij with the default layout and a new unnamed session" data-example="zellij"><td>zellij</td><td>Start Zellij</td></tr>
       <tr data-tip="Start Zellij using a named layout. Built-ins: default, compact, strider, classic, disable-status-bar, plus welcome (the welcome screen)." data-example="zellij -l compact"><td>zellij -l &lt;layout&gt;</td><td>Start with a layout</td></tr>
@@ -1112,7 +1116,7 @@
        LAYOUTS & CONFIGURATION
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header teal" data-cmd="Layouts & Configuration" data-tip="Zellij layouts are KDL files that define the initial pane/tab arrangement. Store them in ~/.config/zellij/layouts/. The config file lives at ~/.config/zellij/config.kdl (or wherever $ZELLIJ_CONFIG_DIR points).">Layouts &amp; Configuration</div>
+    <h2 class="card-header teal" data-cmd="Layouts & Configuration" data-tip="Zellij layouts are KDL files that define the initial pane/tab arrangement. Store them in ~/.config/zellij/layouts/. The config file lives at ~/.config/zellij/config.kdl (or wherever $ZELLIJ_CONFIG_DIR points).">Layouts &amp; Configuration</h2>
     <table>
       <tr data-tip="Built-in layouts included with Zellij, usable directly with 'zellij -l &lt;name&gt;'." data-example="zellij -l compact"><td>default, compact, strider, classic, disable-status-bar</td><td>Built-in layouts</td></tr>
       <tr data-tip="Store custom layout files here. Zellij will find them by name automatically" data-example="~/.config/zellij/layouts/"><td>~/.config/zellij/layouts/</td><td>Custom layout directory</td></tr>
@@ -1130,7 +1134,7 @@
        PLUGINS & TIPS
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header" data-cmd="Plugins & Tips" data-tip="Zellij has a WebAssembly plugin system. Plugins can add new panes, UI elements, and actions. The session manager (Ctrl+o → w) and file browser are examples of built-in plugins.">Plugins &amp; Tips</div>
+    <h2 class="card-header" data-cmd="Plugins & Tips" data-tip="Zellij has a WebAssembly plugin system. Plugins can add new panes, UI elements, and actions. The session manager (Ctrl+o → w) and file browser are examples of built-in plugins.">Plugins &amp; Tips</h2>
     <table>
       <tr data-tip="Zellij sets this env var to '0' inside its panes. Detect a session by its presence, e.g. [ -n &quot;$ZELLIJ&quot; ], not by its value." data-example="echo $ZELLIJ"><td>$ZELLIJ</td><td>Detect if inside Zellij</td></tr>
       <tr data-tip="Zellij sets this to the session name. Useful in your prompt or scripts" data-example="echo $ZELLIJ_SESSION_NAME"><td>$ZELLIJ_SESSION_NAME</td><td>Current session name</td></tr>
@@ -1147,7 +1151,7 @@
        TMUX → ZELLIJ TRANSLATION
        ══════════════════════════════════════════════════════════════════ -->
   <div class="card">
-    <div class="card-header red" data-cmd="tmux → Zellij" data-tip="Coming from tmux? This card maps common tmux prefix commands to their native Zellij equivalents, where modes are entered with Ctrl+ combos and most shortcuts are single keys within that mode. Zellij also ships a built-in Tmux mode: Ctrl+b acts as a prefix for the familiar keys.">tmux → Zellij Translation</div>
+    <h2 class="card-header red" data-cmd="tmux → Zellij" data-tip="Coming from tmux? This card maps common tmux prefix commands to their native Zellij equivalents, where modes are entered with Ctrl+ combos and most shortcuts are single keys within that mode. Zellij also ships a built-in Tmux mode: Ctrl+b acts as a prefix for the familiar keys.">tmux → Zellij Translation</h2>
     <table>
       <tr data-tip="Zellij's built-in Tmux mode, on by default: press Ctrl+b, then &quot; % z c n p x d [ work like tmux. Ctrl+b twice sends a literal Ctrl+b." data-example="Ctrl+b, %"><td>prefix → Ctrl+b (Tmux mode)</td><td>Use tmux-style keys directly</td></tr>
       <tr data-tip="tmux splits horizontally with prefix+&quot;. In Zellij: enter Pane mode, then press d to split down." data-example="Ctrl+p, d"><td>prefix + &quot; → Ctrl+p, d</td><td>Split pane (top/bottom)</td></tr>
@@ -1168,6 +1172,7 @@
   </div>
 
 </div>
+</main>
 
 <!-- CUSTOMIZE BAR -->
 <div class="zj-customize-bar" id="zjCustomizeBar">
@@ -1732,7 +1737,7 @@
   // rowMeta: row → { key, originalHtml, originalText, cardTitle, descText }
   const rowMeta = new Map();
 
-  const EDIT_BTN_HTML = '<button class="zj-edit-btn" title="Edit this binding">✎</button>';
+  const EDIT_BTN_HTML = '<button class="zj-edit-btn" title="Edit this binding" aria-label="Edit this binding">✎</button>';
 
   function getCardTitle(row) {
     const h = row.closest('.card')?.querySelector('.card-header');
