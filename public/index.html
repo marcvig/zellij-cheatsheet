@@ -1245,32 +1245,41 @@
     htmls[0] = inner;
   });
 
-  function escapeRegex(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
   // Wrap matches in <mark> by walking text nodes, so the cell's processed
   // HTML (placeholder spans, danger badge) survives and literal "<layout>"
-  // text is never re-parsed as markup.
+  // text is never re-parsed as markup. Matching runs on the cell's joined
+  // text, so a match spanning a placeholder boundary is marked piecewise.
   function highlight(root, query) {
-    const re = new RegExp(escapeRegex(query), 'gi');
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(node => {
-      const text = node.nodeValue;
+    let text = '';
+    while (walker.nextNode()) {
+      nodes.push({ node: walker.currentNode, start: text.length });
+      text += walker.currentNode.nodeValue;
+    }
+    const lower = text.toLowerCase();
+    const ranges = [];
+    for (let i = lower.indexOf(query); query && i !== -1; i = lower.indexOf(query, i + query.length)) {
+      ranges.push([i, i + query.length]);
+    }
+    if (!ranges.length) return;
+    nodes.forEach(({ node, start }) => {
+      const value = node.nodeValue;
+      const end = start + value.length;
+      const parts = ranges
+        .filter(([a, b]) => a < end && b > start)
+        .map(([a, b]) => [Math.max(a, start) - start, Math.min(b, end) - start]);
+      if (!parts.length) return;
       const frag = document.createDocumentFragment();
-      let last = 0, m;
-      re.lastIndex = 0;
-      while ((m = re.exec(text))) {
-        frag.append(text.slice(last, m.index));
+      let last = 0;
+      parts.forEach(([a, b]) => {
+        frag.append(value.slice(last, a));
         const mark = document.createElement('mark');
-        mark.textContent = m[0];
+        mark.textContent = value.slice(a, b);
         frag.append(mark);
-        last = m.index + m[0].length;
-      }
-      if (last === 0) return;
-      frag.append(text.slice(last));
+        last = b;
+      });
+      frag.append(value.slice(last));
       node.replaceWith(frag);
     });
   }
