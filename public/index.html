@@ -900,6 +900,7 @@
   </div>
 </div>
 
+<header>
 <div class="header-top">
   <button class="crab-btn" id="crabBtn" aria-label="🦀 Easter egg" title="Zellij is written in Rust 🦀">🦀</button>
   <h1>Zellij Cheatsheet</h1>
@@ -907,8 +908,10 @@
 </div>
 <p class="subtitle">Complete Zellij command reference. Searchable, fast, always free</p>
 <p class="disclaimer">⚠ <span>Keybindings shown are Zellij defaults and may differ based on your config. Click <kbd class="disclaimer-edit-icon">✎</kbd> to customize any binding</span></p>
+</header>
 
 <!-- SEARCH -->
+<main>
 <div class="search-wrap">
   <span class="search-icon">🔍</span>
   <input type="text" id="search" aria-label="Search commands" placeholder="Type to filter commands…" autocomplete="off" spellcheck="false">
@@ -932,7 +935,6 @@
   <span data-cmd="Scroll Mode" data-tip="Enter with Ctrl+s. Scroll through pane history, search text, edit scrollback in $EDITOR. Press Esc or Enter to exit. Particularly useful for long command output."><span class="badge badge-s">SCR</span> Scroll</span>
 </div>
 
-<main>
 <div class="grid" id="grid">
 
   <!-- ══════════════════════════════════════════════════════════════════
@@ -1186,7 +1188,6 @@
   </div>
 
 </div>
-</main>
 
 <!-- CUSTOMIZE BAR -->
 <div class="zj-customize-bar" id="zjCustomizeBar">
@@ -1196,6 +1197,7 @@
   <button id="zjResetAll" class="zj-cb-reset" style="display:none">↺ Reset all</button>
   <input type="file" id="zjImportFile" accept=".json" style="display:none">
 </div>
+</main>
 
 <footer>
   Zellij Cheatsheet · Complete terminal multiplexer reference · Updated September 2026 · <a href="https://zellij.dev" target="_blank" rel="noopener" style="color:#768390;">zellij.dev</a>
@@ -1408,9 +1410,7 @@
     tooltipCopy.classList.remove('copied');
     tooltip.classList.add('visible');
     tipVisible = true;
-    if (activeRow && activeRow !== el) activeRow.setAttribute('aria-expanded', 'false');
     activeRow = el;
-    el.setAttribute('aria-expanded', 'true');
 
     // Auto-close after 6 s. Resets on every new open; paused while the popup
     // has focus or the pointer (see focusin / mouseenter below)
@@ -1445,19 +1445,18 @@
     const hadFocus = tooltip.contains(document.activeElement);
     tooltip.classList.remove('visible');
     tipVisible = false;
-    activeRow?.setAttribute('aria-expanded', 'false');
     activeRow = null;
     if (hadFocus && returnFocusEl) returnFocusEl.focus({ preventScroll: true });
     returnFocusEl = null;
   }
 
   // Keyboard access: every tip target is focusable, exposes its description
-  // to assistive tech, and opens the popup with Enter / Space.
+  // to assistive tech, and opens the popup with Enter / Space. No
+  // aria-expanded: rows, headings, and spans don't support it (axe fails).
   function makeKeyboardTarget(el) {
     el.tabIndex = 0;
     el.setAttribute('aria-description', el.dataset.tip);
     el.setAttribute('aria-haspopup', 'dialog');
-    el.setAttribute('aria-expanded', 'false');
     el.setAttribute('aria-controls', 'tooltip');
     el.addEventListener('keydown', e => {
       if (e.target !== el || (e.key !== 'Enter' && e.key !== ' ')) return;
