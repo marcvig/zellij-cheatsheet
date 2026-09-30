@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  html:
+    name: HTML validation (Nu Html Checker)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate public HTML
+        run: |
+          npm install --no-save --no-audit --no-fund --ignore-scripts vnu-jar@26.9.27
+          java -jar node_modules/vnu-jar/build/dist/vnu.jar --errors-only public/index.html
+
+  style:
+    name: No em dashes in published copy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check for em dashes
+        run: |
+          # Project style: no em dashes in anything a visitor reads. <title> /
+          # og:title / twitter:title brand separators are the one exception.
+          if grep -n '—' public/*.html og-image.html README.md CONTRIBUTING.md \
+               | grep -vE '<title>|og:title|twitter:title'; then
+            echo "::error::Em dash found. Rewrite with a colon, comma, period, or parentheses."
+            exit 1
+          fi
+
+  links:
+    name: Link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          fail: true
+          args: >-
+            --no-progress
+            --max-retries 3
+            --retry-wait-time 5
+            --accept '200..=299,403,429'
+            --root-dir ${{ github.workspace }}/public
+            --exclude '^https://fonts\.(googleapis|gstatic)\.com/?$'
+            --exclude 'googletagmanager\.com'
+            public/index.html README.md CONTRIBUTING.md
