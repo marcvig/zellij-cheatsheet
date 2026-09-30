@@ -157,7 +157,7 @@
     border-color: #c084fc;
     box-shadow: 0 0 0 3px #8b5cf633;
   }
-  .search-wrap input::placeholder { color: #484f58; }
+  .search-wrap input::placeholder { color: #7d8590; } /* 4.6:1 on #161b22 */
   .search-slash {
     position: absolute;
     right: 12px;
@@ -183,7 +183,7 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: #484f58;
+    color: #7d8590;
     font-size: 0.85rem;
     cursor: pointer;
     padding: 4px 6px;
@@ -198,7 +198,7 @@
     pointer-events: auto;
   }
   .search-clear:hover { color: #e2e8f0; }
-  body.light .search-clear { color: #8c959f; }
+  body.light .search-clear { color: #656d76; }
   body.light .search-clear:hover { color: #24292f; }
   .search-icon {
     position: absolute;
@@ -439,7 +439,7 @@
   body.light .subtitle                 { color: #57606a; }
   body.light .search-wrap input        { background: #f6f8fa; border-color: #7c3aed88; color: #24292f; }
   body.light .search-wrap input:focus  { border-color: #7c3aed; box-shadow: 0 0 0 3px #7c3aed33; }
-  body.light .search-wrap input::placeholder { color: #8c959f; }
+  body.light .search-wrap input::placeholder { color: #656d76; } /* 4.9:1 on #f6f8fa */
   body.light .search-icon              { color: #7c3aed; }
   body.light .search-count             { color: #57606a; }
   body.light .search-count.no-results  { color: #cf222e; }
@@ -507,7 +507,7 @@
   .tooltip-close {
     position: absolute; top: 8px; right: 10px;
     background: none; border: none;
-    color: #484f58; font-size: 1rem; cursor: pointer;
+    color: #7d8590; font-size: 1rem; cursor: pointer;
     padding: 2px 7px; border-radius: 4px; line-height: 1;
     transition: color 0.15s, background 0.15s;
   }
@@ -546,7 +546,7 @@
     display: none; align-items: center; gap: 6px;
   }
   body.light .tooltip { background: #f6f8fa; border-color: #7c3aed; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
-  body.light .tooltip-close { color: #8c959f; }
+  body.light .tooltip-close { color: #656d76; }
   body.light .tooltip-close:hover { color: #24292f; background: #eaeef2; }
   body.light .tooltip-cmd { color: #7c3aed; }
   body.light .tooltip-desc { color: #24292f; }
@@ -578,12 +578,12 @@
   .disclaimer {
     text-align: center;
     font-size: 0.72rem;
-    color: #484f58;
+    color: #7d8590;
     margin-top: -12px;
     margin-bottom: 18px;
   }
   .disclaimer span { color: #8b949e; }
-  body.light .disclaimer { color: #8c959f; }
+  body.light .disclaimer { color: #656d76; }
   body.light .disclaimer span { color: #57606a; }
   kbd.disclaimer-edit-icon {
     font-family: inherit;
@@ -1583,14 +1583,19 @@
   });
 
   tooltipCopy.addEventListener('click', () => {
-    navigator.clipboard.writeText(tooltipCode.textContent).then(() => {
-      tooltipCopy.textContent = 'Copied ✓';
-      tooltipCopy.classList.add('copied');
+    const flash = (label, ok) => {
+      tooltipCopy.textContent = label;
+      tooltipCopy.classList.toggle('copied', ok);
       setTimeout(() => {
         tooltipCopy.textContent = 'Copy';
         tooltipCopy.classList.remove('copied');
       }, 2000);
-    });
+    };
+    // Clipboard API can be missing (non-secure origin) or denied by the browser
+    if (!navigator.clipboard) { flash('Copy failed', false); return; }
+    navigator.clipboard.writeText(tooltipCode.textContent)
+      .then(() => flash('Copied ✓', true))
+      .catch(() => flash('Copy failed', false));
   });
 </script>
 
@@ -1611,21 +1616,23 @@
     };
 
     const colors = ['#c084fc', '#a78bfa', '#ffffff', '#e3b341', '#f85149', '#818cf8', '#e2e8f0'];
+    // The crab still animates if confetti.browser.min.js failed to load
+    const burst = opts => { if (typeof confetti === 'function') confetti(opts); };
 
     crabBtn.classList.add('exploding');
 
     setTimeout(() => {
-      confetti({ particleCount: 140, spread: 360, startVelocity: 50,
+      burst({ particleCount: 140, spread: 360, startVelocity: 50,
                  origin, colors, ticks: 220, scalar: 1.1 });
     }, 180);
 
     setTimeout(() => {
-      confetti({ particleCount: 70, spread: 200, startVelocity: 28,
+      burst({ particleCount: 70, spread: 200, startVelocity: 28,
                  origin, colors, ticks: 180, scalar: 0.85 });
     }, 320);
 
     setTimeout(() => {
-      confetti({ particleCount: 40, spread: 120, startVelocity: 18,
+      burst({ particleCount: 40, spread: 120, startVelocity: 18,
                  origin, colors: ['#c084fc', '#a78bfa', '#ffffff'],
                  ticks: 120, scalar: 0.65 });
     }, 480);
@@ -1643,7 +1650,7 @@
 </script>
 
 <!-- CONFIRM OVERLAY -->
-<div class="zj-confirm-overlay" id="zjConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="zjConfirmTitle">
+<div class="zj-confirm-overlay" id="zjConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="zjConfirmTitle" aria-describedby="zjConfirmMsg">
   <div class="zj-confirm-dialog">
     <h3 id="zjConfirmTitle"></h3>
     <p id="zjConfirmMsg"></p>
@@ -1765,19 +1772,35 @@
   const confirmCancel  = document.getElementById('zjConfirmCancel');
   const confirmOk      = document.getElementById('zjConfirmOk');
   let confirmCb = null;
+  let confirmReturn = null; // element to refocus when the dialog closes
 
   function showConfirm(title, msg, okLabel, cb) {
     document.getElementById('zjConfirmTitle').textContent = title;
     document.getElementById('zjConfirmMsg').textContent   = msg;
     confirmOk.textContent = okLabel;
     confirmCb = cb;
+    confirmReturn = document.activeElement;
     confirmOverlay.classList.add('open');
     confirmCancel.focus();
   }
-  function closeConfirm() { confirmOverlay.classList.remove('open'); confirmCb = null; }
+  function closeConfirm() {
+    confirmOverlay.classList.remove('open');
+    confirmCb = null;
+    // Return focus to the trigger, or to Export if the action hid the trigger
+    const back = confirmReturn && confirmReturn.offsetParent !== null
+      ? confirmReturn : document.getElementById('zjExport');
+    confirmReturn = null;
+    back?.focus();
+  }
 
   confirmCancel.addEventListener('click', closeConfirm);
-  confirmOk.addEventListener('click', () => { const cb = confirmCb; closeConfirm(); cb && cb(); });
+  confirmOk.addEventListener('click', () => { const cb = confirmCb; confirmCb = null; cb && cb(); closeConfirm(); });
+  // Keep Tab inside the dialog: it only has the two buttons
+  confirmOverlay.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    e.preventDefault();
+    (document.activeElement === confirmCancel ? confirmOk : confirmCancel).focus();
+  });
   confirmOverlay.addEventListener('click', e => { if (e.target === confirmOverlay) closeConfirm(); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && confirmOverlay.classList.contains('open')) closeConfirm();
@@ -1986,7 +2009,8 @@
     a.href = URL.createObjectURL(blob);
     a.download = 'zellij-custom-bindings.json';
     a.click();
-    URL.revokeObjectURL(a.href);
+    // Revoking synchronously can cancel the download in some browsers
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
 
   document.getElementById('zjImport')?.addEventListener('click', () => {
