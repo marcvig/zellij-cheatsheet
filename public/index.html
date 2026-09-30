@@ -1310,6 +1310,7 @@
       countEl.textContent = '';
       countEl.className = 'search-count';
       window.onSearchUpdate && window.onSearchUpdate();
+      window.resetRoving && window.resetRoving();
       return;
     }
 
@@ -1337,6 +1338,7 @@
       countEl.className = 'search-count';
     }
     window.onSearchUpdate && window.onSearchUpdate();
+    window.resetRoving && window.resetRoving();
   });
 </script>
 
@@ -1492,8 +1494,44 @@
     document.querySelectorAll('tr.row-touched').forEach(r => r.classList.remove('row-touched'));
   }, { passive: true });
 
+  // Roving tabindex: each card is one Tab stop; Up/Down/Home/End move between
+  // its visible rows. A row's edit button joins the Tab order only while that
+  // row has focus, so Tab goes row -> its edit button -> next card.
+  function visibleRows(card) {
+    return [...card.querySelectorAll('tr[data-tip]:not(.hidden-row)')];
+  }
+  function setRovingRow(card, row) {
+    card.querySelectorAll('tr[data-tip]').forEach(r => { r.tabIndex = r === row ? 0 : -1; });
+  }
+  window.resetRoving = function () {
+    document.querySelectorAll('#grid .card').forEach(card => {
+      const rows = visibleRows(card);
+      setRovingRow(card, rows.find(r => r.tabIndex === 0) || rows[0] || null);
+    });
+  };
+
   document.querySelectorAll('tr[data-tip]').forEach(row => {
     makeKeyboardTarget(row);
+    const card = row.closest('.card');
+    row.addEventListener('focus', () => setRovingRow(card, row));
+    row.addEventListener('focusin', () => {
+      const btn = row.querySelector('.zj-edit-btn');
+      if (btn) btn.tabIndex = 0;
+    });
+    row.addEventListener('focusout', e => {
+      if (row.contains(e.relatedTarget)) return;
+      const btn = row.querySelector('.zj-edit-btn');
+      if (btn) btn.tabIndex = -1;
+    });
+    row.addEventListener('keydown', e => {
+      if (e.target !== row) return;
+      const rows = visibleRows(card);
+      const i = rows.indexOf(row);
+      const next = { ArrowDown: rows[i + 1], ArrowUp: rows[i - 1], Home: rows[0], End: rows[rows.length - 1] }[e.key];
+      if (!next) return;
+      e.preventDefault();
+      next.focus();
+    });
     // Desktop click
     row.addEventListener('click', e => {
       if (tooltip.contains(e.target)) return;
@@ -1551,6 +1589,8 @@
       if (tipVisible && !tooltip.contains(e.relatedTarget)) scheduleClose();
     });
   });
+
+  window.resetRoving();
 
   tooltip.addEventListener('mouseenter', () => { cancelClose(); clearTimeout(autoCloseTimer); });
   tooltip.addEventListener('focusin', () => clearTimeout(autoCloseTimer));
@@ -1820,7 +1860,7 @@
   // rowMeta: row → { key, originalHtml, originalText, cardTitle, descText }
   const rowMeta = new Map();
 
-  const EDIT_BTN_HTML = '<button class="zj-edit-btn" title="Edit this binding" aria-label="Edit this binding">✎</button>';
+  const EDIT_BTN_HTML = '<button class="zj-edit-btn" tabindex="-1" title="Edit this binding" aria-label="Edit this binding">✎</button>';
 
   function getCardTitle(row) {
     const h = row.closest('.card')?.querySelector('.card-header');
@@ -1900,6 +1940,7 @@
         resetBinding(row);
         saveBindings(bindings);
         updateResetAllBtn();
+        row.focus({ preventScroll: true });
       });
     }
 
@@ -1921,6 +1962,7 @@
       }
       saveBindings(bindings);
       updateResetAllBtn();
+      row.focus({ preventScroll: true });
     }
 
     function doCancel() {
@@ -1931,6 +1973,7 @@
         td.innerHTML = meta.originalHtml;
         injectEditBtn(row);
       }
+      row.focus({ preventScroll: true });
     }
 
     saveBtn.addEventListener('click',   e => { e.stopPropagation(); doSave(); });
